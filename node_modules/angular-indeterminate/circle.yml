@@ -1,0 +1,6 @@
+machine:
+    node:
+        version: stable
+test:
+    post:
+        - cp coverage/junit.xml $CIRCLE_TEST_REPORTS/coverage.xml

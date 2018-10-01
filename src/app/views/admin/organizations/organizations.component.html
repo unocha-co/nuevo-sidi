@@ -1,0 +1,56 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{title}}
+        </div>
+        <div class="card-body">
+          <button class="btn btn-success btn-square btn-new col-lg-4 col-md-4 col-sm-6 col-xs-12" data-toggle="modal" (click)="show_modal({id:null})" type="button"><i class="fa fa-plus"></i> Nueva {{entity}}</button>
+          <table class="table table-striped table5">
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<button type="button" style="visibility: hidden;" id="btn-show-modal" (click)="modal.show()"></button>
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{(item.id == null ? 'Nueva ' : 'Editar ') + entity}}</h4>
+        <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="name" [(ngModel)]="item.name" class="form-control" placeholder="Nombre">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="acronym" [(ngModel)]="item.acronym" class="form-control" placeholder="Siglas">
+            </div>
+          </div>
+         <div class="form-group row">
+              <label class="col-md-12 col-form-label">Tipo de organización</label>
+              <div class="col-md-12">
+                <select name="organization_type_id" [(ngModel)]="item.organization_type_id" class="form-control">
+                  <option *ngFor="let i of type" value="{{i.id}}">{{i.type}}</option>
+                </select>
+              </div>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modal" (click)="modal.hide()">Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="saveOrUpdate()">Guardar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>

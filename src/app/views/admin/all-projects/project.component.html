@@ -1,0 +1,694 @@
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" (click)="changeStatusCollapse(1)">
+          Informaci&oacute;n B&aacute;sica
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse" [ngClass]="{'show' :collapsedSelected == 1 && isCollapsed}"
+         aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">PROYECTOS</div>
+              <div class="card-body">
+                <div class="row p15">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="Codigo">Código</label>
+                      <input type="text" class="form-control" [(ngModel)]="item.code">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="form-group" *ngFor="let b of item.budget; let i=index">
+                          <label for="Presupuesto">Presupuesto {{i== 0 ? 'Total' : 'Año ' + i}}</label>
+                          <input type="text" class="form-control" [(ngModel)]="item.budget[i].value" name="name{{i}}" placeholder="USD$">
+                        </div>
+                        <div class="form-group mb0">
+                          <button class="btn btn-outline-success btn-sm mr5" (click)="addP()">
+                            <i class="fa fa-plus"></i>&nbsp;Añadir
+                          </button>
+                          <button class="btn btn-outline-danger btn-sm" (click)="removeP()">
+                            <i class="fa fa-trash"></i>&nbsp;Borrar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <input type="text" placeholder="Fecha de incio" class="form-control" bsDatepicker [(ngModel)]="item.date_start">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <input type="text" placeholder="Fecha de final" class="form-control" bsDatepicker [(ngModel)]="item.date_end">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="name">Organización ejecutora</label>
+                      <ng-select [items]="organizations" [(ngModel)]="item.organization" bindLabel="name" bindValue="id" placeholder="Selecciones la Organización">
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="name">Nombre del Proyecto</label>
+                      <input type="text" class="form-control" [(ngModel)]="item.name">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="name">Hace parte del plan</label>
+                      <select class="form-control" [(ngModel)]="item.plan_part">
+                        <option>Selecciona una opción</option>
+                        <option value="no">No</option>
+                        <option value="hrp">HRP</option>
+                        <option value="ag">Agenda</option>
+                        <option value="hrpag">HRP y Agenda</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-12">
+                    {{item | json}}
+                    <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
+                    <div class="col-md-9 col-form-label">
+                      <div class="form-check form-check-inline mr-1">
+                        <input class="form-check-input" type="radio" name="int" value="true" [(ngModel)]="item.interagency">
+                        <label class="form-check-label" for="inline-checkbox1">Si</label>
+                      </div>
+                      <div class="form-check form-check-inline mr-1">
+                        <input class="form-check-input" type="radio" name="int" value="false" [(ngModel)]="item.interagency">
+                        <label class="form-check-label" for="inline-checkbox2">No</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="name">Implementadores</label>
+                      <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
+                        bindLabel="name" bindValue="id" placeholder="Seleccione las organizaciones" [(ngModel)]="item.implementers">
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="name">Drescripción</label>
+                      <textarea  rows="9" class="form-control" [(ngModel)]="item.description"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="card mb0">
+                      <div class="card-body">
+                        <label>Donantes</label>
+                        <div class="row" *ngFor="let d of item.donors; let i=index">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <ng-select [items]="organizations" [(ngModel)]="item.donors[i].id" name="don{{i}}" placeholder="Donante" bindLabel="name" bindValue="id"></ng-select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <input type="text" class="form-control" [(ngModel)]="item.donors[i].value" name="ap{{i}}" placeholder="Aportes U$" >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group mb0">
+                          <button class="btn btn-outline-success btn-sm mr5" (click)="addD()">
+                            <i class="fa fa-plus"></i>&nbsp;Añadir
+                          </button>
+                          <button class="btn btn-outline-danger btn-sm" (click)="removeD()">
+                            <i class="fa fa-trash"></i>&nbsp;Borrar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">COBERTURA GEOGRAFICA</div>
+              <div class="card-body">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Proyecto es de cobertura nacional</label>
+                    <select id="select" name="select" class="form-control" (change)="updateNacional($event.target.value)">
+                      <option value="1">Si</option>
+                      <option value="0">No</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="div1" [ngClass]="{'hide' : item.national}">
+                  <div class="col-md-12">
+                    <h5><strong>Departamentos</strong></h5>
+                    <table class="table table-bordered table-sm">
+                      <tbody>
+                      <tr *ngFor="let r of regions">
+                        <td>
+                          <input [(ngModel)]="r.selected" type="checkbox" (change)="checkAll(r, 'childrens', $event.target.checked)">
+                          <label (click)="showMpos(r)"><strong>{{r.name}} <i class="fa fa-angle-{{!r.show ? 'down' : 'up'}} fa-lg mt-4"></i></strong></label>
+                          <ul class="mpos" [ngClass]="{'hide' : !r.show}">
+                            <li *ngFor="let c of r.childrens">
+                              <input type="checkbox" [(ngModel)]="c.selected" (change)="checkMain(c,r,'childrens', $event.target.checked)" (change)="c.selected = $event.target.checked">{{c.name}} - {{c.selected}}
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary" (click)="step1()">Guardar y seguir</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" [ngClass]="{'disabled' : step < 2}">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link" (click)="changeStatusCollapse(2)">
+          Clasificaciones
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" [ngClass]="{'show' :collapsedSelected == 2 && isCollapsed && step == 2}"
+         aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row p15">
+          <div class="col-md-12">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+              <tr>
+                <th></th>
+                <th>¿Es tema principal?</th>
+                <th>Presupuesto U$</th>
+              </tr>
+              </thead>
+              <tbody class="tbody">
+              <tr>
+                <td><input type="checkbox"><label>Agua, saneamiento e higiene (WASH)</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Alojamiento y ayuda no alimentaria</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Coordinación</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Educación en emergencia (EeE)</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Ningún cluster</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Protección</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Recuperación Temprana</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Salud</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Seguridad alimentaria y nutrición (SAN)</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"><label>Telecomunicaciones en emergencias</label></td>
+                <td><input type="radio" name="radio1"></td>
+                <td><input type="number" class="form-control"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <div class="card-header card-padding-5"><label class="font-weight-bold label-title">Construcción de paz</label>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Democracia de base local para la garantia de derechos</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá avanzado hacia la paz gracias a la consolidación del Estado Social de Derecho y la
+                    gobernabilidad inclusiva, mediante el fortalecimiento de la participación ciudadana, la eficacia de
+                    los derechos humanos en todo el territorio nacional.
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Derechos de las victimas</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá avanzado hacia el restablecimiento sostenible de los drechos de las victimas del
+                    conflicto armado.
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Transformación de conflictos y cultura de paz</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá avanzado hacia la paz reduciendo la violencia, aumentando la resolución pacifica de
+                    conflictos y garantizando el derecho a la justicia.
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Transición hacia la paz</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá implementado los acuerdos de fin de conflicto armado en los ámbitos nacional y
+                    territorial.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card-header card-padding-5"><label class="font-weight-bold label-title">Desarrollo sostenible</label>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Equidad de género</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá avanzado en la disminución de las brechas de género.
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Equidad y movilidad social</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá logrado mayor equidad mediante el avance en los ODS y la redcción sostenible de
+                    brechas económicas, sociales y de género.
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <input type="checkbox"><label>Inclusión y bienestar rural</label>
+                  </div>
+                  <div class="card-body">
+                    Colombia habrá logrado mayor equidad mediante la inclusión social y economica de
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row p15">
+          <div class="col-md-6">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+              <tr>
+                <th>
+                  <input type="checkbox" class="checkall1 dib" (change)="checkAll1($event.target.checked)">
+                  <label>1.1 Acceso y uso de la tiera</label>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.1 Fondos de tierra</label>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.2 Créditos y subsidios
+                  para promover el acceso a la tierra</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.3 Formalización masiva de
+                  pequeñas y medianas propiedades rurales</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.4 Catastro
+                  multipropósito</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.5 Justicia Agraria</label>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.6 Frontera agricola y
+                  protección de áreas de reserva</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.7 Zonas de reserva
+                  campesina</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.8 programas de desarrolo
+                  con enfoque territorial</label></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+              <tr>
+                <th>
+                  <input type="checkbox" class="checkall2 dib" (change)="checkAll2($event.target.checked)"><label>1.2 Planes nacionales</label>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.1 Vias terciarias</label>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.2 Infraestructura de
+                  riesgo</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.3 Infraestructura
+                  eléctrica y de conectividad</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.4 Desarrollo social: salud
+                  rural</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.5 Desarrolo socail:
+                  educación rural</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.6 Desarrollo socail:
+                  vivienda y agua potable</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.7 Estimulo a la protección
+                  agropecuaria y la economia solidaria y cooperativa</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.8 Formalización laboral y
+                  portección social</label></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.9 Seguridad alimentaria y
+                  nutrición</label></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary" (click)="changeStatusCollapse(3)">Guardar y seguir</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" [ngClass]="{'disabled' : step < 3}">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link" (click)="changeStatusCollapse(3)">
+          Beneficiarios
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" [ngClass]="{'show' :collapsedSelected == 3 && isCollapsed && step == 3}"
+         aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><label><strong>POBLACIONALES</strong></label>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class=".text-center">TOTAL BENEFICIARIOS</label>
+                      <input type="text" name="input1-group1" class="form-control" [(ngModel)]="total">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>MUJERES</label>
+                      <input (keyup)="muhoKeyup()" [(ngModel)]="mujeresTotal" name="mujeresTotal" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>0-5 años</label>
+                      <input (keyup)="mujerValue()" [(ngModel)]="mujer05" name="mujer05" type="text"
+                             name="input1-group1"
+                             class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>6-17 años</label>
+                      <input (keyup)="mujerValue()" [(ngModel)]="mujer617" name="mujer617" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>18-64 años</label>
+                      <input (keyup)="mujerValue()" [(ngModel)]="mujer1864" name="mujer1864" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>65+ años</label>
+                      <input (keyup)="mujerValue()" [(ngModel)]="mujer65" name="mujer65" type="text"
+                             name="input1-group1"
+                             class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>HOMBRES</label>
+                      <input (keyup)="hombreKeyup()" [(ngModel)]="hombresTotal" name="hombresTotal" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>0-5 años</label>
+                      <input (keyup)="hombreValue()" [(ngModel)]="hombre05" name="hombre05" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>6-17 años</label>
+                      <input (keyup)="hombreValue()" [(ngModel)]="hombre617" name="hombre617" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>18-64 años</label>
+                      <input (keyup)="hombreValue()" [(ngModel)]="hombre1864" name="hombre1864" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>65+ años</label>
+                      <input (keyup)="hombreValue()" [(ngModel)]="hombre65" name="hombre65" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Victimas del conflicto</label>
+                      <input type="text" name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Afectados por desatres</label>
+                      <input type="text" name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Desmovilizados/Reinsertados</label>
+                      <input type="text" name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Afro-Colombianos</label>
+                      <input type="text" name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Indigenas</label>
+                      <input type="text" name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Comentarios: Descripción de género étnico, situación de desplazamientos, etc
+                        (Opcional)</label>
+                      <textarea type="text" name="input1-group1" class="form-control"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header"><label><strong>INDIRECTOS</strong></label>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class=".text-center">TOTAL BENEFICIARIOS</label>
+                      <input type="text" name="input1-group1" class="form-control" [(ngModel)]="_total">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>MUJERES</label>
+                      <input (keyup)="_muhoKeyup()" [(ngModel)]="_mujeresTotal" name="_mujeresTotal" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>0-5 años</label>
+                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer05" name="_mujer05" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>6-17 años</label>
+                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer617" name="_mujer617" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>18-64 años</label>
+                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer1864" name="_mujer1864" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>65+ años</label>
+                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer65" name="_mujer65" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>HOMBRES</label>
+                      <input (keyup)="_hombreKeyup()" [(ngModel)]="_hombresTotal" name="_hombresTotal" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>0-5 años</label>
+                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre05" name="_hombre05" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>6-17 años</label>
+                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre617" name="_hombre617" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>18-64 años</label>
+                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre1864" name="_hombre1864" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>65+ años</label>
+                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre65" name="_hombre65" type="text"
+                             name="input1-group1" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <strong>NO POBLACIONALES</strong>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>ORGANIZACIONES BENEFICAS</label>
+                      <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
+                                 bindLabel="name" placeholder="Seleccione">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary" (click)="changeStatusCollapse(3)">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

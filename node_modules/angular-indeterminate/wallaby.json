@@ -1,0 +1,12 @@
+{
+  "files": [
+        {"pattern": "node_modules/jquery/dist/jquery.js", "instrument": false},
+        {"pattern": "node_modules/angular/angular.js", "instrument": false},
+        {"pattern": "node_modules/angular-mocks/angular-mocks.js", "instrument": false},
+        "src/*.coffee"
+  ],
+  "tests": [
+    "tests/*.coffee"
+  ],
+  "testFramework": "jasmine@2.1.3"
+}

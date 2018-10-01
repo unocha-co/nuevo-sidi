@@ -1,0 +1,1 @@
+export const navItems = localStorage.getItem("menu") ? JSON.parse(localStorage.getItem("menu")) : [];
