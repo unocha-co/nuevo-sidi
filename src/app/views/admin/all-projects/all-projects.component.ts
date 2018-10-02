@@ -20,7 +20,7 @@ export class AllProjectsComponent implements AfterContentInit {
   data: any[];
   item: Project[];
   dataTable: any;
-  title = 'Proyectos'; // Titulo para contenedor de la tabla
+  title = 'Proyecto'; // Titulo para contenedor de la tabla
   // Columnas del datatable
   titles = [
     { data: 'name', title: 'Nombre'},

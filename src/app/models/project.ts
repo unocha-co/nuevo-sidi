@@ -1,8 +1,52 @@
 export class Project {
   constructor() {
-    this.budget = [{value: ''}];
-    this.donors = [{id: '', value: ''}];
-    this.national = true;
+    this.budget = [{value: null}];
+    this.donors = [{id: null, value: null}];
+    this.national = "1";
+    this.hrp = 1;
+    this.tags = {};
+    this.implementers = [];
+    this.beneficiaries = {
+      poblacionales:{
+        total: null,
+        gender:{
+          m:{
+            total: null,
+            age1: null,
+            age2: null,
+            age3: null,
+            age4: null
+          },
+          h:{
+            total: null,
+            age1: null,
+            age2: null,
+            age3: null,
+            age4: null
+          }
+        }
+      },
+      indirectos:{
+        total: null,
+        gender:{
+          m:{
+            total: null,
+            age1: null,
+            age2: null,
+            age3: null,
+            age4: null
+          },
+          h:{
+            total: null,
+            age1: null,
+            age2: null,
+            age3: null,
+            age4: null
+          }
+        },
+        groups: []
+      }
+    }
   }
   id:number;
   code: string;
@@ -11,11 +55,15 @@ export class Project {
   date_end: number;
   organization: number;
   name: string;
-  plan_part:string;
+  hrp:number;
   interagency:boolean;
   implementers:any;
   description:string;
   donors:any;
-  national:boolean;
+  national:string;
   location:any;
+  contact:number;
+  tags:any;
+  _organization:string;
+  beneficiaries:any;
 }

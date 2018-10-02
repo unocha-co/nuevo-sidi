@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Http } from '@angular/http';
@@ -17,59 +17,106 @@ export class ProjectComponent implements OnInit{
   organizations: any;
   step: number;
   regions:any;
+  contacts:any;
+  hrps:any;
+  tags:any;
+  tag_active = {id:'', name:'', childrens: []};
+  entity = "project";
 
   amazonasCheck = false;
   antioquiaCheck = false;
-  entity = "project";
+  
 
-  collapsedSelected: number;
-  total:any;
-  hombresTotal:any;
-  mujeresTotal:any;
-  mujer05:number;
-  mujer617:number;
-  mujer1864:number;
-  mujer65:number;
-  hombre05:number;
-  hombre617:number;
-  hombre1864:number;
-  hombre65:number;
-  //segundo card
-  _total:any;
-  _hombresTotal:any;
-  _mujeresTotal:any;
-  _mujer05:number;
-  _mujer617:number;
-  _mujer1864:number;
-  _mujer65:number;
-  _hombre05:number;
-  _hombre617:number;
-  _hombre1864:number;
-  _hombre65:number;
+  collapsedSelected: number;  
   count = 0;
 
   constructor(private http: Http, private service: Service, private router: Router,
-              private route: ActivatedRoute ) {
+              private route: ActivatedRoute, public cdr: ChangeDetectorRef ) {
     this.item = new Project();
-    /*this.route.params.subscribe( params => {
-        this.id = params['id'];
-        if ( this.id !== 'nuevo' ) {
-          this.service.getById( this.entity_api, this.id ).subscribe( item => this.item = item.data ); }
-    });*/
+    this.route.params.subscribe( params => {
+        let id = params['id'];
+        if (id) {
+          this.service.getById(this.entity, id).subscribe( item => {
+            this.step = 3;
+            this.collapsedSelected = 1; 
+            let data = item.data;
+            this.item.id = data.id;
+            this.item.code = data.code;
+            this.item.name = data.name;
+            this.item.hrp = data.hrp;
+            this.item.contact = data.contact;
+            this.item.date_start = data.date_start;
+            this.item.date_end = data.date_end;
+            this.item.organization = data.organization;
+            this.item.description = data.description;
+            this.item.interagency = data.interagency == 1 ? true : false;
+            this.service.getRequest("getAllRegions").subscribe(res => {
+              this.regions = res;
+              for(let r of this.regions){
+                let childrens = r['childrens'];
+                for(let c of childrens){
+                  for(let s of data.location){
+                    if(s.admin_id == c.id)
+                      c.selected = true;
+                  }
+                }
+                this.checkMain2(r, 'childrens');
+              }
+            });
+            if(data.implementers.length > 0){
+              this.item.implementers = [];
+              for(let d of data.implementers)
+                this.item.implementers.push(d.organization_id);
+            }
+            if(data.budget.length > 0){
+              this.item.budget = [];
+              for(let d of data.budget)
+                this.item.budget.push({id:d.budget_id, value:d.budget});
+            }
+            if(data.donors.length > 0){
+              this.item.donors = [];
+              for(let d of data.donors)
+                this.item.donors.push({id:d.organization_id, value:d.value});
+            }
+            if(data.location.length == 1 && data.location[0].admin_id == 0)
+              this.item.national == "1";
+            else
+              this.item.national = "0";
+          }); 
+        }else{
+          this.service.getRequest("getAllRegions").subscribe(data => {
+            this.regions = data;
+          });
+        }
+    });
     this.collapsedSelected = 1;
     this.step = 1;
-    this.mujeresTotal= ''
-    this.hombresTotal= ''
-    this.total=''
-    this._mujeresTotal= ''
-    this._hombresTotal= ''
-    this._total=''
     this.count = 0;
   }
 
   ngOnInit() {
+    this.tags = [];
     this.service.getAll("organizations").subscribe(data => this.organizations = data);
-    this.service.getRequest("getAllRegions").subscribe(data => this.regions = data);
+    this.service.getRequest("contacts").subscribe(data => this.contacts = data);
+    this.service.getRequest("hrp").subscribe(data => this.hrps = data);
+    this.service.getRequest("project_tags").subscribe(data => {
+      for(let t of data){
+        this.tag_active = {id:'', name:'', childrens: []};
+        this.tag_active.id = t.id;
+        this.tag_active.name = t.name;
+        this.recursive_childrens(t);
+        this.tags.push(this.tag_active);
+      }
+    });
+  }
+
+   recursive_childrens($item){
+    if($item.childrens.length > 0){
+      for(let $c of $item.childrens)
+        $c = this.recursive_childrens($c);
+    }else
+      this.tag_active.childrens.push({id:$item.id, name:$item.name})
+    return $item;
   }
 
   addP(){
@@ -111,6 +158,16 @@ export class ProjectComponent implements OnInit{
     parent.selected = checkMain;
   }
 
+  checkMain2(parent, childrens){
+    let checkMain = true;
+    for(let c of parent[childrens])
+      if(!c.select){
+        checkMain = false;
+        break;
+      }
+    parent.selected = checkMain;
+  }
+
   getItemsSelected(parents, childrens){
     let items = [];
     for(let p of parents){
@@ -128,69 +185,27 @@ export class ProjectComponent implements OnInit{
       this.item.location = this.getItemsSelected(this.regions, 'childrens');
 
     this.service.saveOrUpdate(this.entity, this.item).subscribe(data => {
-      console.log(data);
+      if(data.status){
+        this.item.id = data.data.id;
+        this.step = 2;
+        this.collapsedSelected = 2;
+        this.isCollapsed = true;
+      }
     });
   }
 
-
-
-
-  checkAll2(checked){
-      $('.check2').prop('checked',checked);
+  step2(){
+    this.service.saveOrUpdate("project_tags_rel", {project_id: this.item.id, tags: this.item.tags}).subscribe(data => {
+      if(data.status){
+        this.step = 3;
+        this.collapsedSelected = 3;
+        this.isCollapsed = true;
+      }
+    });
   }
 
-  unCheckAll2(){
-    $('.checkall2').prop('checked',false);
-  }
-
-  addItem(){
-    let html = '<div class="col-md-6 donantesadd' + this.count + '"><div class="form-group">';
-    html += '<select class="form-control"><option>Donante</option><option>Asociación Nacional de Ayuda Solidaria</option>';
-    html += '<option>Apoyo A Victimas de la Violencia Socio Política Pro Recuperación Emocional</option>';
-    html += '<option>Centro Cristiano para la Justicia, La Paz y La Acción No Violenta</option></select>';
-    html += '</div></div><div class="col-md-6 donantesadd' + (this.count++) + '"><div class="form-group">';
-    html += '<input type="text" class="form-control" placeholder="Aportes U$"></div></div>';
-    $('.donantes').append(html);
-  }
-
-  removeItem(){
-    $('.donantesadd' + (this.count - 1)).remove();
-    this.count--;
-  }
-
-  updateNacional(value){
-    this.item.national = value == "1" ? true : false;
-  }
-
-  mujerValue(){
-    this.mujeresTotal = (this.mujer05 | 0) + (this.mujer617 | 0) + (this.mujer1864 | 0) + (this.mujer65 | 0)
-    this.total = (this.hombresTotal | 0) + (this.mujeresTotal | 0)
-  }
-
-  hombreValue(){
-    this.hombresTotal = (this.hombre05 | 0) + (this.hombre617 | 0) + (this.hombre1864 | 0) + (this.hombre65 | 0)
-    this.total = (this.hombresTotal | 0) + (this.mujeresTotal | 0)
-  }
-
-  _mujerValue(){
-    this._mujeresTotal = (this._mujer05 | 0) + (this._mujer617 | 0) + (this._mujer1864 | 0) + (this._mujer65 | 0)
-    this._total = (this._hombresTotal | 0) + (this._mujeresTotal | 0)
-  }
-
-  _hombreValue(){
-    this._hombresTotal = (this._hombre05 | 0) + (this._hombre617 | 0) + (this._hombre1864 | 0) + (this._hombre65 | 0)
-    this._total = (this._hombresTotal | 0) + (this._mujeresTotal | 0)
-  }
-
-  changeStatusCollapse(position){
-    if(position <= this.step){
-      this.isCollapsed = position == this.collapsedSelected && this.isCollapsed ? false : true;
-      this.collapsedSelected = position;
-    }
-  }
-
-  save() {
-    this.service.saveOrUpdate("", this.item).subscribe(data => {
+  step3() {
+    this.service.postRequest("step3/" + this.item.id, this.item.beneficiaries).then(data => {
       if (data) {
         Swal({
           position: 'top-end',
@@ -211,4 +226,37 @@ export class ProjectComponent implements OnInit{
       }
     });
   }
+
+  updateNacional(value){
+    this.item.national = value;
+  }
+
+  mujerValue(){
+    this.item.beneficiaries.poblacionales.gender.m.total = (this.item.beneficiaries.poblacionales.gender.m.age1 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age2 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age3 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age4 | 0)
+    this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
+  }
+
+  hombreValue(){
+    this.item.beneficiaries.poblacionales.gender.h.total = (this.item.beneficiaries.poblacionales.gender.h.age1 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age2 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age3 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age4 | 0)
+    this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
+  }
+
+  _mujerValue(){
+    this.item.beneficiaries.indirectos.gender.m.total = (this.item.beneficiaries.indirectos.gender.m.age1 | 0) + (this.item.beneficiaries.indirectos.gender.m.age2 | 0) + (this.item.beneficiaries.indirectos.gender.m.age3 | 0) + (this.item.beneficiaries.indirectos.gender.m.age4 | 0)
+    this.item.beneficiaries.indirectos.total = (this.item.beneficiaries.indirectos.gender.h.total | 0) + (this.item.beneficiaries.indirectos.gender.m.total | 0)
+  }
+
+  _hombreValue(){
+    this.item.beneficiaries.indirectos.gender.h.total = (this.item.beneficiaries.indirectos.gender.h.age1 | 0) + (this.item.beneficiaries.indirectos.gender.h.age2 | 0) + (this.item.beneficiaries.indirectos.gender.h.age3 | 0) + (this.item.beneficiaries.indirectos.gender.h.age4 | 0)
+    this.item.beneficiaries.indirectos.total = (this.item.beneficiaries.indirectos.gender.h.total | 0) + (this.item.beneficiaries.indirectos.gender.m.total | 0)
+  }
+
+  changeStatusCollapse(position){
+    if(position <= this.step){
+      this.isCollapsed = position == this.collapsedSelected && this.isCollapsed ? false : true;
+      this.collapsedSelected = position;
+    }
+  }
+
+
 }

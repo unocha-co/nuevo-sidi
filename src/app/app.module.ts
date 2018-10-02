@@ -86,7 +86,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     providers: [
       {
         provide: LocationStrategy,
-        useClass: HashLocationStrategy,
+        useClass: PathLocationStrategy,
       },
       SweetAlertService,
       Service,

@@ -43,12 +43,12 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <input type="text" placeholder="Fecha de incio" class="form-control" bsDatepicker [(ngModel)]="item.date_start">
+                      <input type="text" placeholder="Fecha de incio" class="form-control" bsDatepicker [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <input type="text" placeholder="Fecha de final" class="form-control" bsDatepicker [(ngModel)]="item.date_end">
+                      <input type="text" placeholder="Fecha de final" class="form-control" bsDatepicker [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}">
                     </div>
                   </div>
                   <div class="col-md-12">
@@ -67,25 +67,27 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="name">Hace parte del plan</label>
-                      <select class="form-control" [(ngModel)]="item.plan_part">
-                        <option>Selecciona una opción</option>
-                        <option value="no">No</option>
-                        <option value="hrp">HRP</option>
-                        <option value="ag">Agenda</option>
-                        <option value="hrpag">HRP y Agenda</option>
+                      <select class="form-control" [(ngModel)]="item.hrp">
+                        <option *ngFor="let h of hrps;let i=index" value="{{h.id}}">{{h.name}}</option>
                       </select>
                     </div>
                   </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Contacto en terreno</label>
+                        <ng-select [items]="contacts" [(ngModel)]="item.contact" bindLabel="name" bindValue="id" placeholder="Seleccione el contacto">
+                          </ng-select>
+                      </div>
+                    </div>
                   <div class="form-group col-md-12">
-                    {{item | json}}
                     <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
                     <div class="col-md-9 col-form-label">
                       <div class="form-check form-check-inline mr-1">
-                        <input class="form-check-input" type="radio" name="int" value="true" [(ngModel)]="item.interagency">
+                        <input class="form-check-input" type="radio" name="int" value="true" [(ngModel)]="item.interagency" [checked]="item.interagency">
                         <label class="form-check-label" for="inline-checkbox1">Si</label>
                       </div>
                       <div class="form-check form-check-inline mr-1">
-                        <input class="form-check-input" type="radio" name="int" value="false" [(ngModel)]="item.interagency">
+                        <input class="form-check-input" type="radio" name="int" value="false" [(ngModel)]="item.interagency" [checked]="!item.interagency">
                         <label class="form-check-label" for="inline-checkbox2">No</label>
                       </div>
                     </div>
@@ -142,13 +144,13 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <label>Proyecto es de cobertura nacional</label>
-                    <select id="select" name="select" class="form-control" (change)="updateNacional($event.target.value)">
+                    <select id="select" name="select" [(ngModel)]="item.national" class="form-control" (change)="updateNacional($event.target.value)">
                       <option value="1">Si</option>
                       <option value="0">No</option>
                     </select>
                   </div>
                 </div>
-                <div id="div1" [ngClass]="{'hide' : item.national}">
+                <div id="div1" [ngClass]="{'hide' : item.national == '1'}">
                   <div class="col-md-12">
                     <h5><strong>Departamentos</strong></h5>
                     <table class="table table-bordered table-sm">
@@ -159,7 +161,7 @@
                           <label (click)="showMpos(r)"><strong>{{r.name}} <i class="fa fa-angle-{{!r.show ? 'down' : 'up'}} fa-lg mt-4"></i></strong></label>
                           <ul class="mpos" [ngClass]="{'hide' : !r.show}">
                             <li *ngFor="let c of r.childrens">
-                              <input type="checkbox" [(ngModel)]="c.selected" (change)="checkMain(c,r,'childrens', $event.target.checked)" (change)="c.selected = $event.target.checked">{{c.name}} - {{c.selected}}
+                              <input type="checkbox" [(ngModel)]="c.selected" (change)="checkMain(c,r,'childrens', $event.target.checked)" (change)="c.selected = $event.target.checked">{{c.name}}
                             </li>
                           </ul>
                         </td>
@@ -186,7 +188,7 @@
         </button>
       </h5>
     </div>
-    <div id="collapseTwo" class="collapse" [ngClass]="{'show' :collapsedSelected == 2 && isCollapsed && step == 2}"
+    <div id="collapseTwo" class="collapse" [ngClass]="{'show' :collapsedSelected == 2 && isCollapsed && step >= 2}"
          aria-labelledby="headingTwo" data-parent="#accordion">
       <div class="card-body">
         <div class="row p15">
@@ -253,192 +255,19 @@
               </tbody>
             </table>
           </div>
-          <div class="col-md-6">
-            <div class="card-header card-padding-5"><label class="font-weight-bold label-title">Construcción de paz</label>
+          <div class="col-md-6" *ngFor="let t of tags;let i=index">
+            <div class="card-header card-padding-5"><label class="font-weight-bold label-title">{{t.name}}</label>
               <div class="col-sm-12 col-md-12">
                 <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Democracia de base local para la garantia de derechos</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá avanzado hacia la paz gracias a la consolidación del Estado Social de Derecho y la
-                    gobernabilidad inclusiva, mediante el fortalecimiento de la participación ciudadana, la eficacia de
-                    los derechos humanos en todo el territorio nacional.
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Derechos de las victimas</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá avanzado hacia el restablecimiento sostenible de los drechos de las victimas del
-                    conflicto armado.
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Transformación de conflictos y cultura de paz</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá avanzado hacia la paz reduciendo la violencia, aumentando la resolución pacifica de
-                    conflictos y garantizando el derecho a la justicia.
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Transición hacia la paz</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá implementado los acuerdos de fin de conflicto armado en los ámbitos nacional y
-                    territorial.
-                  </div>
+                    <ng-select [items]="t.childrens" [(ngModel)]="item.tags[t.id]" name="tag{{i}}"  [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione" bindLabel="name" bindValue="id"></ng-select>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card-header card-padding-5"><label class="font-weight-bold label-title">Desarrollo sostenible</label>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Equidad de género</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá avanzado en la disminución de las brechas de género.
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Equidad y movilidad social</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá logrado mayor equidad mediante el avance en los ODS y la redcción sostenible de
-                    brechas económicas, sociales y de género.
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <input type="checkbox"><label>Inclusión y bienestar rural</label>
-                  </div>
-                  <div class="card-body">
-                    Colombia habrá logrado mayor equidad mediante la inclusión social y economica de
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="row p15">
-          <div class="col-md-6">
-            <table class="table table-bordered table-striped table-sm">
-              <thead>
-              <tr>
-                <th>
-                  <input type="checkbox" class="checkall1 dib" (change)="checkAll1($event.target.checked)">
-                  <label>1.1 Acceso y uso de la tiera</label>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.1 Fondos de tierra</label>
-                </td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.2 Créditos y subsidios
-                  para promover el acceso a la tierra</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.3 Formalización masiva de
-                  pequeñas y medianas propiedades rurales</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.4 Catastro
-                  multipropósito</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.5 Justicia Agraria</label>
-                </td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.6 Frontera agricola y
-                  protección de áreas de reserva</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.7 Zonas de reserva
-                  campesina</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check1" (change)="unCheckAll1()"><label>1.1.8 programas de desarrolo
-                  con enfoque territorial</label></td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-md-6">
-            <table class="table table-bordered table-striped table-sm">
-              <thead>
-              <tr>
-                <th>
-                  <input type="checkbox" class="checkall2 dib" (change)="checkAll2($event.target.checked)"><label>1.2 Planes nacionales</label>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.1 Vias terciarias</label>
-                </td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.2 Infraestructura de
-                  riesgo</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.3 Infraestructura
-                  eléctrica y de conectividad</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.4 Desarrollo social: salud
-                  rural</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.5 Desarrolo socail:
-                  educación rural</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.6 Desarrollo socail:
-                  vivienda y agua potable</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.7 Estimulo a la protección
-                  agropecuaria y la economia solidaria y cooperativa</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.8 Formalización laboral y
-                  portección social</label></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="check2" (change)="unCheckAll2()"><label>1.2.9 Seguridad alimentaria y
-                  nutrición</label></td>
-              </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="changeStatusCollapse(3)">Guardar y seguir</button>
+        <button type="button" class="btn btn-primary" (click)="step2()">Guardar y seguir</button>
       </div>
     </div>
   </div>
@@ -450,7 +279,7 @@
         </button>
       </h5>
     </div>
-    <div id="collapseThree" class="collapse" [ngClass]="{'show' :collapsedSelected == 3 && isCollapsed && step == 3}"
+    <div id="collapseThree" class="collapse" [ngClass]="{'show' :collapsedSelected == 3 && isCollapsed && step >= 2}"
          aria-labelledby="headingThree" data-parent="#accordion">
       <div class="card-body">
         <div class="row">
@@ -463,20 +292,20 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class=".text-center">TOTAL BENEFICIARIOS</label>
-                      <input type="text" name="input1-group1" class="form-control" [(ngModel)]="total">
+                      <input type="text" [(ngModel)]="item.beneficiaries.poblacionales.total" name="total" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>MUJERES</label>
-                      <input (keyup)="muhoKeyup()" [(ngModel)]="mujeresTotal" name="mujeresTotal" type="text"
+                      <input (keyup)="muhoKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.total" name="mujeresTotal" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="mujer05" name="mujer05" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age1" name="mujer05" type="text"
                              name="input1-group1"
                              class="form-control">
                     </div>
@@ -484,21 +313,21 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="mujer617" name="mujer617" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age2" name="mujer617" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="mujer1864" name="mujer1864" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age3" name="mujer1864" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="mujer65" name="mujer65" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age4" name="mujer65" type="text"
                              name="input1-group1"
                              class="form-control">
                     </div>
@@ -506,35 +335,35 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>HOMBRES</label>
-                      <input (keyup)="hombreKeyup()" [(ngModel)]="hombresTotal" name="hombresTotal" type="text"
+                      <input (keyup)="hombreKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.total" name="hombresTotal" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="hombre05" name="hombre05" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age1" name="hombre05" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="hombre617" name="hombre617" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age2" name="hombre617" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="hombre1864" name="hombre1864" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age3" name="hombre1864" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="hombre65" name="hombre65" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age4" name="hombre65" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
@@ -588,76 +417,76 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class=".text-center">TOTAL BENEFICIARIOS</label>
-                      <input type="text" name="input1-group1" class="form-control" [(ngModel)]="_total">
+                      <input type="text" name="_total" class="form-control" [(ngModel)]="item.beneficiaries.indirectos.total">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>MUJERES</label>
-                      <input (keyup)="_muhoKeyup()" [(ngModel)]="_mujeresTotal" name="_mujeresTotal" type="text"
+                      <input (keyup)="_muhoKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.total" name="_mujeresTotal" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer05" name="_mujer05" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age1" name="_mujer05" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer617" name="_mujer617" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age2" name="_mujer617" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer1864" name="_mujer1864" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age3" name="_mujer1864" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="_mujer65" name="_mujer65" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age4" name="_mujer65" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>HOMBRES</label>
-                      <input (keyup)="_hombreKeyup()" [(ngModel)]="_hombresTotal" name="_hombresTotal" type="text"
+                      <input (keyup)="_hombreKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.total" name="_hombresTotal" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre05" name="_hombre05" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age1" name="_hombre05" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre617" name="_hombre617" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age2" name="_hombre617" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre1864" name="_hombre1864" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age3" name="_hombre1864" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="_hombre65" name="_hombre65" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age4" name="_hombre65" type="text"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
@@ -675,7 +504,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>ORGANIZACIONES BENEFICAS</label>
-                      <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
+                      <ng-select [items]="organizations" [multiple]="true"  [(ngModel)]="item._organization" name="_organization" [closeOnSelect]="false" [searchable]="true"
                                  bindLabel="name" placeholder="Seleccione">
                       </ng-select>
                     </div>
@@ -687,7 +516,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="changeStatusCollapse(3)">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="step3()">Guardar</button>
       </div>
     </div>
   </div>
