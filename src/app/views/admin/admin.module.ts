@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CustomFormsModule } from 'ng2-validation'
 
 import { AdministrativeDivisionsComponent } from './administrative-divisions/administrative-divisions.component';
 import { ContactGroupsComponent } from './contact-groups/contact-groups.component';
@@ -15,15 +16,18 @@ import { AllProjectsComponent } from './all-projects/all-projects.component';
 import { ProjectComponent } from './all-projects/project.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AdminRoutingModule } from './admin-routing.module';
+import { ValidationError } from '../error/validation-error.component';
+import { ErrorMessagePipe } from '../../pipes/error-messaje';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    CustomFormsModule,
     AdminRoutingModule,
     ModalModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
   ],
   declarations: [
     AdministrativeDivisionsComponent,
@@ -34,7 +38,9 @@ import { AdminRoutingModule } from './admin-routing.module';
     ProjectClassComponent,
     UserProfilesComponent,
     AllProjectsComponent,
-    ProjectComponent
+    ProjectComponent,
+    ValidationError,
+    ErrorMessagePipe
   ]
 })
 export class AdminModule { }

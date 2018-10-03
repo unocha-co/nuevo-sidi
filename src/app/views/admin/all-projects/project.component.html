@@ -1,134 +1,145 @@
 <div id="accordion">
   <div class="card">
-    <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-        <button class="btn btn-link" (click)="changeStatusCollapse(1)">
-          Informaci&oacute;n B&aacute;sica
-        </button>
-      </h5>
-    </div>
+    <form name="form" (ngSubmit)="step1(f.form)" #f="ngForm" novalidate>
+      <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+          <button class="btn btn-link" (click)="changeStatusCollapse(1)">
+            Informaci&oacute;n B&aacute;sica
+          </button>
+        </h5>
+      </div>
 
-    <div id="collapseOne" class="collapse" [ngClass]="{'show' :collapsedSelected == 1 && isCollapsed}"
-         aria-labelledby="headingOne" data-parent="#accordion">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header">PROYECTOS</div>
-              <div class="card-body">
-                <div class="row p15">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="Codigo">Código</label>
-                      <input type="text" class="form-control" [(ngModel)]="item.code">
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="form-group" *ngFor="let b of item.budget; let i=index">
-                          <label for="Presupuesto">Presupuesto {{i== 0 ? 'Total' : 'Año ' + i}}</label>
-                          <input type="text" class="form-control" [(ngModel)]="item.budget[i].value" name="name{{i}}" placeholder="USD$">
-                        </div>
-                        <div class="form-group mb0">
-                          <button class="btn btn-outline-success btn-sm mr5" (click)="addP()">
-                            <i class="fa fa-plus"></i>&nbsp;Añadir
-                          </button>
-                          <button class="btn btn-outline-danger btn-sm" (click)="removeP()">
-                            <i class="fa fa-trash"></i>&nbsp;Borrar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" placeholder="Fecha de incio" class="form-control" bsDatepicker [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" placeholder="Fecha de final" class="form-control" bsDatepicker [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}">
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="name">Organización ejecutora</label>
-                      <ng-select [items]="organizations" [(ngModel)]="item.organization" bindLabel="name" bindValue="id" placeholder="Selecciones la Organización">
-                      </ng-select>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="name">Nombre del Proyecto</label>
-                      <input type="text" class="form-control" [(ngModel)]="item.name">
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="name">Hace parte del plan</label>
-                      <select class="form-control" [(ngModel)]="item.hrp">
-                        <option *ngFor="let h of hrps;let i=index" value="{{h.id}}">{{h.name}}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
+      <div id="collapseOne" class="collapse" [ngClass]="{'show' :collapsedSelected == 1 && isCollapsed}"
+          aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">PROYECTOS</div>
+                <div class="card-body">
+                  <div class="row p15">
+                    <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Contacto en terreno</label>
-                        <ng-select [items]="contacts" [(ngModel)]="item.contact" bindLabel="name" bindValue="id" placeholder="Seleccione el contacto">
-                          </ng-select>
+                        <label for="Codigo">Código</label>
+                        <input type="text" class="form-control" [(ngModel)]="item.code" name="code">
                       </div>
                     </div>
-                  <div class="form-group col-md-12">
-                    <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
-                    <div class="col-md-9 col-form-label">
-                      <div class="form-check form-check-inline mr-1">
-                        <input class="form-check-input" type="radio" name="int" value="true" [(ngModel)]="item.interagency" [checked]="item.interagency">
-                        <label class="form-check-label" for="inline-checkbox1">Si</label>
-                      </div>
-                      <div class="form-check form-check-inline mr-1">
-                        <input class="form-check-input" type="radio" name="int" value="false" [(ngModel)]="item.interagency" [checked]="!item.interagency">
-                        <label class="form-check-label" for="inline-checkbox2">No</label>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="Codigo">Costo</label>
+                        <input type="number" class="form-control" [(ngModel)]="item.cost" #c="ngModel" pattern="\d+" name="cost">
+                        <error-message *ngIf="c.invalid && (c.dirty || c.touched)" [message]="c.errors | validationError"></error-message>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="name">Implementadores</label>
-                      <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
-                        bindLabel="name" bindValue="id" placeholder="Seleccione las organizaciones" [(ngModel)]="item.implementers">
-                      </ng-select>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label for="name">Drescripción</label>
-                      <textarea  rows="9" class="form-control" [(ngModel)]="item.description"></textarea>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="card mb0">
-                      <div class="card-body">
-                        <label>Donantes</label>
-                        <div class="row" *ngFor="let d of item.donors; let i=index">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <ng-select [items]="organizations" [(ngModel)]="item.donors[i].id" name="don{{i}}" placeholder="Donante" bindLabel="name" bindValue="id"></ng-select>
-                            </div>
+                    <div class="col-md-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="form-group" *ngFor="let b of item.budget; let i=index">
+                            <label for="Presupuesto">Presupuesto {{i== 0 ? 'Total' : 'Año ' + i}}</label>
+                            <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="name{{i}}" placeholder="USD$" #b="ngModel" pattern="\d+">
+                            <error-message *ngIf="b.invalid && b.touched" [message]="b.errors | validationError"></error-message>
                           </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <input type="text" class="form-control" [(ngModel)]="item.donors[i].value" name="ap{{i}}" placeholder="Aportes U$" >
-                            </div>
+                          <div class="form-group mb0">
+                            <button class="btn btn-outline-success btn-sm mr5" (click)="addP()">
+                              <i class="fa fa-plus"></i>&nbsp;Añadir
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" (click)="removeP()">
+                              <i class="fa fa-trash"></i>&nbsp;Borrar
+                            </button>
                           </div>
                         </div>
-                        <div class="form-group mb0">
-                          <button class="btn btn-outline-success btn-sm mr5" (click)="addD()">
-                            <i class="fa fa-plus"></i>&nbsp;Añadir
-                          </button>
-                          <button class="btn btn-outline-danger btn-sm" (click)="removeD()">
-                            <i class="fa fa-trash"></i>&nbsp;Borrar
-                          </button>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="text" placeholder="Fecha de incio" class="form-control" bsDatepicker [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="text" placeholder="Fecha de final" class="form-control" bsDatepicker [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Organización ejecutora</label>
+                        <ng-select [items]="organizations" [(ngModel)]="item.organization" name="oe" bindLabel="name" bindValue="id" placeholder="Selecciones la Organización">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Nombre del Proyecto</label>
+                        <input type="text" class="form-control" [(ngModel)]="item.name" #name="ngModel" required name="np">
+                        <error-message *ngIf="name.invalid && name.touched" [message]="name.errors | validationError"></error-message>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Hace parte del plan</label>
+                        <select class="form-control" [(ngModel)]="item.hrp" name="hrp">
+                          <option *ngFor="let h of hrps;let i=index" value="{{h.id}}">{{h.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="name">Contacto en terreno</label>
+                          <ng-select [items]="contacts" [(ngModel)]="item.contact" name="contact" bindLabel="name" bindValue="id" placeholder="Seleccione el contacto">
+                            </ng-select>
+                        </div>
+                      </div>
+                    <div class="form-group col-md-12">
+                      <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
+                      <div class="col-md-9 col-form-label">
+                        <div class="form-check form-check-inline mr-1">
+                          <input class="form-check-input" type="radio" name="int" value="true" [(ngModel)]="item.interagency" [checked]="item.interagency">
+                          <label class="form-check-label" for="inline-checkbox1">Si</label>
+                        </div>
+                        <div class="form-check form-check-inline mr-1">
+                          <input class="form-check-input" type="radio" name="int" value="false" [(ngModel)]="item.interagency" [checked]="!item.interagency">
+                          <label class="form-check-label" for="inline-checkbox2">No</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Implementadores</label>
+                        <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
+                          bindLabel="name" bindValue="id" placeholder="Seleccione las organizaciones" [(ngModel)]="item.implementers" name="imp">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Drescripción</label>
+                        <textarea  rows="9" class="form-control" [(ngModel)]="item.description" name="desc"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="card mb0">
+                        <div class="card-body">
+                          <label>Donantes</label>
+                          <div class="row" *ngFor="let d of item.donors; let i=index">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <ng-select [items]="organizations" [(ngModel)]="item.donors[i].id" name="don{{i}}" placeholder="Donante" bindLabel="name" bindValue="id"></ng-select>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <input type="number" class="form-control" [(ngModel)]="item.donors[i].value" name="ap{{i}}" placeholder="Aportes U$" >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group mb0">
+                            <button class="btn btn-outline-success btn-sm mr5" (click)="addD()">
+                              <i class="fa fa-plus"></i>&nbsp;Añadir
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" (click)="removeD()">
+                              <i class="fa fa-trash"></i>&nbsp;Borrar
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -136,49 +147,49 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header">COBERTURA GEOGRAFICA</div>
-              <div class="card-body">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label>Proyecto es de cobertura nacional</label>
-                    <select id="select" name="select" [(ngModel)]="item.national" class="form-control" (change)="updateNacional($event.target.value)">
-                      <option value="1">Si</option>
-                      <option value="0">No</option>
-                    </select>
-                  </div>
-                </div>
-                <div id="div1" [ngClass]="{'hide' : item.national == '1'}">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">COBERTURA GEOGRAFICA</div>
+                <div class="card-body">
                   <div class="col-md-12">
-                    <h5><strong>Departamentos</strong></h5>
-                    <table class="table table-bordered table-sm">
-                      <tbody>
-                      <tr *ngFor="let r of regions">
-                        <td>
-                          <input [(ngModel)]="r.selected" type="checkbox" (change)="checkAll(r, 'childrens', $event.target.checked)">
-                          <label (click)="showMpos(r)"><strong>{{r.name}} <i class="fa fa-angle-{{!r.show ? 'down' : 'up'}} fa-lg mt-4"></i></strong></label>
-                          <ul class="mpos" [ngClass]="{'hide' : !r.show}">
-                            <li *ngFor="let c of r.childrens">
-                              <input type="checkbox" [(ngModel)]="c.selected" (change)="checkMain(c,r,'childrens', $event.target.checked)" (change)="c.selected = $event.target.checked">{{c.name}}
-                            </li>
-                          </ul>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
+                    <div class="form-group">
+                      <label>Proyecto es de cobertura nacional</label>
+                      <select id="select" name="select" [(ngModel)]="item.national" class="form-control" (change)="updateNacional($event.target.value)">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="div1" [ngClass]="{'hide' : item.national == '1'}">
+                    <div class="col-md-12">
+                      <h5><strong>Departamentos</strong></h5>
+                      <table class="table table-bordered table-sm">
+                        <tbody>
+                        <tr *ngFor="let r of regions">
+                          <td>
+                            <input [(ngModel)]="r.selected" type="checkbox" (change)="checkAll(r, 'childrens', $event.target.checked)" name="r{{r.id}}">
+                            <label (click)="showMpos(r)"><strong>{{r.name}} <i class="fa fa-angle-{{!r.show ? 'down' : 'up'}} fa-lg mt-4"></i></strong></label>
+                            <ul class="mpos" [ngClass]="{'hide' : !r.show}">
+                              <li *ngFor="let c of r.childrens">
+                                <input type="checkbox" name="cc{{c.id}}" [(ngModel)]="c.selected" (change)="checkMain(c,r,'childrens', $event.target.checked)" (change)="c.selected = $event.target.checked">{{c.name}}
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary">Guardar y seguir</button>
+        </div>
       </div>
-      <div class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="step1()">Guardar y seguir</button>
-      </div>
-    </div>
+    </form>
   </div>
   <div class="card" [ngClass]="{'disabled' : step < 2}">
     <div class="card-header" id="headingTwo">
@@ -292,20 +303,20 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class=".text-center">TOTAL BENEFICIARIOS</label>
-                      <input type="text" [(ngModel)]="item.beneficiaries.poblacionales.total" name="total" class="form-control">
+                      <input type="number" [(ngModel)]="item.beneficiaries.poblacionales.total" name="total" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>MUJERES</label>
-                      <input (keyup)="muhoKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.total" name="mujeresTotal" type="text"
+                      <input (keyup)="muhoKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.total" name="mujeresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age1" name="mujer05" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age1" name="mujer05" type="number"
                              name="input1-group1"
                              class="form-control">
                     </div>
@@ -313,21 +324,21 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age2" name="mujer617" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age2" name="mujer617" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age3" name="mujer1864" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age3" name="mujer1864" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age4" name="mujer65" type="text"
+                      <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age4" name="mujer65" type="number"
                              name="input1-group1"
                              class="form-control">
                     </div>
@@ -335,73 +346,73 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>HOMBRES</label>
-                      <input (keyup)="hombreKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.total" name="hombresTotal" type="text"
+                      <input (keyup)="hombreKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.total" name="hombresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age1" name="hombre05" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age1" name="hombre05" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age2" name="hombre617" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age2" name="hombre617" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age3" name="hombre1864" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age3" name="hombre1864" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age4" name="hombre65" type="text"
+                      <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age4" name="hombre65" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Victimas del conflicto</label>
-                      <input type="text" name="input1-group1" class="form-control">
+                      <input type="number" name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Afectados por desatres</label>
-                      <input type="text" name="input1-group1" class="form-control">
+                      <input type="number" name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Desmovilizados/Reinsertados</label>
-                      <input type="text" name="input1-group1" class="form-control">
+                      <input type="number" name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Afro-Colombianos</label>
-                      <input type="text" name="input1-group1" class="form-control">
+                      <input type="number" name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Indigenas</label>
-                      <input type="text" name="input1-group1" class="form-control">
+                      <input type="number" name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Comentarios: Descripción de género étnico, situación de desplazamientos, etc
                         (Opcional)</label>
-                      <textarea type="text" name="input1-group1" class="form-control"></textarea>
+                      <textarea type="number" name="input1-group1" class="form-control"></textarea>
                     </div>
                   </div>
                 </div>
@@ -417,76 +428,76 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class=".text-center">TOTAL BENEFICIARIOS</label>
-                      <input type="text" name="_total" class="form-control" [(ngModel)]="item.beneficiaries.indirectos.total">
+                      <input type="number" name="_total" class="form-control" [(ngModel)]="item.beneficiaries.indirectos.total">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>MUJERES</label>
-                      <input (keyup)="_muhoKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.total" name="_mujeresTotal" type="text"
+                      <input (keyup)="_muhoKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.total" name="_mujeresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age1" name="_mujer05" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age1" name="_mujer05" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age2" name="_mujer617" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age2" name="_mujer617" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age3" name="_mujer1864" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age3" name="_mujer1864" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age4" name="_mujer65" type="text"
+                      <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age4" name="_mujer65" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>HOMBRES</label>
-                      <input (keyup)="_hombreKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.total" name="_hombresTotal" type="text"
+                      <input (keyup)="_hombreKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.total" name="_hombresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age1" name="_hombre05" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age1" name="_hombre05" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age2" name="_hombre617" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age2" name="_hombre617" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age3" name="_hombre1864" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age3" name="_hombre1864" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
-                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age4" name="_hombre65" type="text"
+                      <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age4" name="_hombre65" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
@@ -504,8 +515,8 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>ORGANIZACIONES BENEFICAS</label>
-                      <ng-select [items]="organizations" [multiple]="true"  [(ngModel)]="item._organization" name="_organization" [closeOnSelect]="false" [searchable]="true"
-                                 bindLabel="name" placeholder="Seleccione">
+                      <ng-select [items]="organizations" [multiple]="true"  [(ngModel)]="item.beneficiaries.organizations" name="org" [closeOnSelect]="false" [searchable]="true"
+                        bindLabel="name" bindValue="id" placeholder="Seleccione las organizaciones">
                       </ng-select>
                     </div>
                   </div>
@@ -516,7 +527,8 @@
         </div>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="step3()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="step3()">Guardar</button> 
+        <button type="button" class="btn btn-primary ml-15" (click)="step3(true)">Guardar y salir</button>
       </div>
     </div>
   </div>

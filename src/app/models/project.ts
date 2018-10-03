@@ -4,6 +4,7 @@ export class Project {
     this.donors = [{id: null, value: null}];
     this.national = "1";
     this.hrp = 1;
+    this.contact = 1;
     this.tags = {};
     this.implementers = [];
     this.beneficiaries = {
@@ -24,7 +25,8 @@ export class Project {
             age3: null,
             age4: null
           }
-        }
+        },
+        groups: []
       },
       indirectos:{
         total: null,
@@ -43,9 +45,9 @@ export class Project {
             age3: null,
             age4: null
           }
-        },
-        groups: []
-      }
+        }
+      },
+      organizations:[]
     }
   }
   id:number;
@@ -66,4 +68,5 @@ export class Project {
   tags:any;
   _organization:string;
   beneficiaries:any;
+  cost:number;
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocationStrategy, PathLocationStrategy, HashLocationStrategy } from '@angular/common';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -10,6 +10,7 @@ import { SweetAlertService } from 'ng2-sweetalert2';
 import { HttpModule } from '@angular/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatCheckboxModule, MatDatepickerModule} from '@angular/material';
+import { BlockUIModule } from 'ng-block-ui';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -49,8 +50,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-
+import { OnlyNumber } from './directives/onlyNumbers.directive';
 
 @NgModule({
   imports: [
@@ -72,7 +72,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    ReactiveFormsModule,
+    BlockUIModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -81,12 +83,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     P500Component,
     LoginComponent,
     CallBackAuth0,
-    RegisterComponent
+    RegisterComponent,
+    OnlyNumber
   ],
     providers: [
       {
         provide: LocationStrategy,
-        useClass: PathLocationStrategy,
+        useClass: HashLocationStrategy,
       },
       SweetAlertService,
       Service,
