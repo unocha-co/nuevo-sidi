@@ -50,7 +50,7 @@ export class Project {
       organizations:[]
     }
   }
-  id:number;
+  id:any;
   code: string;
   budget:any;
   date_start: number;

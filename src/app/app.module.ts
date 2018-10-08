@@ -89,7 +89,7 @@ import { OnlyNumber } from './directives/onlyNumbers.directive';
     providers: [
       {
         provide: LocationStrategy,
-        useClass: HashLocationStrategy,
+        useClass: PathLocationStrategy,
       },
       SweetAlertService,
       Service,

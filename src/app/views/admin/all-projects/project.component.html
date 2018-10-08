@@ -3,9 +3,9 @@
     <form name="form" (ngSubmit)="step1(f.form)" #f="ngForm" novalidate>
       <div class="card-header" id="headingOne">
         <h5 class="mb-0">
-          <button class="btn btn-link" (click)="changeStatusCollapse(1)">
+          <a class="btn btn-link" (click)="changeStatusCollapse(1)">
             Informaci&oacute;n B&aacute;sica
-          </button>
+          </a>
         </h5>
       </div>
 
@@ -194,9 +194,9 @@
   <div class="card" [ngClass]="{'disabled' : step < 2}">
     <div class="card-header" id="headingTwo">
       <h5 class="mb-0">
-        <button class="btn btn-link" (click)="changeStatusCollapse(2)">
+        <a class="btn btn-link" (click)="changeStatusCollapse(2)">
           Clasificaciones
-        </button>
+        </a>
       </h5>
     </div>
     <div id="collapseTwo" class="collapse" [ngClass]="{'show' :collapsedSelected == 2 && isCollapsed && step >= 2}"
@@ -285,9 +285,9 @@
   <div class="card" [ngClass]="{'disabled' : step < 3}">
     <div class="card-header" id="headingThree">
       <h5 class="mb-0">
-        <button class="btn btn-link" (click)="changeStatusCollapse(3)">
+        <a class="btn btn-link" (click)="changeStatusCollapse(3)">
           Beneficiarios
-        </button>
+        </a>
       </h5>
     </div>
     <div id="collapseThree" class="collapse" [ngClass]="{'show' :collapsedSelected == 3 && isCollapsed && step >= 2}"
@@ -309,7 +309,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>MUJERES</label>
-                      <input (keyup)="muhoKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.total" name="mujeresTotal" type="number"
+                      <input (keyup)="mujerValue(true)" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.total" name="mujeresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
@@ -346,7 +346,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>HOMBRES</label>
-                      <input (keyup)="hombreKeyup()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.total" name="hombresTotal" type="number"
+                      <input (keyup)="hombreValue(true)" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.total" name="hombresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
@@ -434,7 +434,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>MUJERES</label>
-                      <input (keyup)="_muhoKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.total" name="_mujeresTotal" type="number"
+                      <input (keyup)="_mujerValue(true)" [(ngModel)]="item.beneficiaries.indirectos.gender.m.total" name="_mujeresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>
@@ -469,7 +469,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>HOMBRES</label>
-                      <input (keyup)="_hombreKeyup()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.total" name="_hombresTotal" type="number"
+                      <input (keyup)="_hombreValue(true)" [(ngModel)]="item.beneficiaries.indirectos.gender.h.total" name="_hombresTotal" type="number"
                              name="input1-group1" class="form-control">
                     </div>
                   </div>

@@ -343,24 +343,40 @@ export class ProjectComponent implements OnInit{
     this.item.national = value;
   }
 
-  mujerValue(){
-    this.item.beneficiaries.poblacionales.gender.m.total = (this.item.beneficiaries.poblacionales.gender.m.age1 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age2 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age3 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age4 | 0)
+  mujerValue(total = false){
+    if(total)
+      this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
+    else{
+      this.item.beneficiaries.poblacionales.gender.m.total = (this.item.beneficiaries.poblacionales.gender.m.age1 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age2 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age3 | 0) + (this.item.beneficiaries.poblacionales.gender.m.age4 | 0)
+      this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
+    }
+  }
+
+  hombreValue(total = false){
+    if(total)
     this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
+    else{
+      this.item.beneficiaries.poblacionales.gender.h.total = (this.item.beneficiaries.poblacionales.gender.h.age1 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age2 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age3 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age4 | 0)
+      this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
+    }
   }
 
-  hombreValue(){
-    this.item.beneficiaries.poblacionales.gender.h.total = (this.item.beneficiaries.poblacionales.gender.h.age1 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age2 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age3 | 0) + (this.item.beneficiaries.poblacionales.gender.h.age4 | 0)
-    this.item.beneficiaries.poblacionales.total = (this.item.beneficiaries.poblacionales.gender.h.total | 0) + (this.item.beneficiaries.poblacionales.gender.m.total | 0)
-  }
-
-  _mujerValue(){
-    this.item.beneficiaries.indirectos.gender.m.total = (this.item.beneficiaries.indirectos.gender.m.age1 | 0) + (this.item.beneficiaries.indirectos.gender.m.age2 | 0) + (this.item.beneficiaries.indirectos.gender.m.age3 | 0) + (this.item.beneficiaries.indirectos.gender.m.age4 | 0)
+  _mujerValue(total = false){
+    if(total)
     this.item.beneficiaries.indirectos.total = (this.item.beneficiaries.indirectos.gender.h.total | 0) + (this.item.beneficiaries.indirectos.gender.m.total | 0)
+    else{
+      this.item.beneficiaries.indirectos.gender.m.total = (this.item.beneficiaries.indirectos.gender.m.age1 | 0) + (this.item.beneficiaries.indirectos.gender.m.age2 | 0) + (this.item.beneficiaries.indirectos.gender.m.age3 | 0) + (this.item.beneficiaries.indirectos.gender.m.age4 | 0)
+      this.item.beneficiaries.indirectos.total = (this.item.beneficiaries.indirectos.gender.h.total | 0) + (this.item.beneficiaries.indirectos.gender.m.total | 0)
+    }
   }
 
-  _hombreValue(){
-    this.item.beneficiaries.indirectos.gender.h.total = (this.item.beneficiaries.indirectos.gender.h.age1 | 0) + (this.item.beneficiaries.indirectos.gender.h.age2 | 0) + (this.item.beneficiaries.indirectos.gender.h.age3 | 0) + (this.item.beneficiaries.indirectos.gender.h.age4 | 0)
+  _hombreValue(total = false){
+    if(total)
     this.item.beneficiaries.indirectos.total = (this.item.beneficiaries.indirectos.gender.h.total | 0) + (this.item.beneficiaries.indirectos.gender.m.total | 0)
+    else{
+      this.item.beneficiaries.indirectos.gender.h.total = (this.item.beneficiaries.indirectos.gender.h.age1 | 0) + (this.item.beneficiaries.indirectos.gender.h.age2 | 0) + (this.item.beneficiaries.indirectos.gender.h.age3 | 0) + (this.item.beneficiaries.indirectos.gender.h.age4 | 0)
+      this.item.beneficiaries.indirectos.total = (this.item.beneficiaries.indirectos.gender.h.total | 0) + (this.item.beneficiaries.indirectos.gender.m.total | 0)
+    }
   }
 
   changeStatusCollapse(position){
