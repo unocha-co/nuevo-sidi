@@ -32,11 +32,10 @@ export class AllProjectsComponent implements AfterContentInit {
         return `<button class="btn btn-primary btn-square" type="button" id="btn-edit-p" data-elemnt-obj="${data.id}"><i class="fa fa-edit"></i></button>
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
-  ]; 
+  ];
   entity = 'Proyectos'; // Nombre de la entidad
   entity_api = 'allprojects'; // Ruta del api
   constructor(private http: Http, private chRef: ChangeDetectorRef, private service: Service, private router: Router ) {
-    console.log(window.location.pathname);
   }
 
   ngAfterContentInit() {

@@ -80,6 +80,13 @@ const routes: Routes = [
       data: {
         title: 'Proyecto'
       }
+    },
+    {
+      path: 'proyectos',
+      component: ProjectComponent,
+      data: {
+        title: 'Proyecto'
+      }
     }
   ]
  }
