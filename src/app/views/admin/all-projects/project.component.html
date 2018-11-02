@@ -86,12 +86,11 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Organización ejecutora*</label>
-
-                        <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
-                                (click)="show_modal(1)" type="button"><i class="fa fa-plus"></i></button>
-
-
+                        <label>Organización ejecutora*</label>
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
+                                (click)="show_modal(1)" type="button">
+                          <i class="fa fa-plus"></i>
+                        </button>
                         <ng-select [items]="organizations" [(ngModel)]="item.organization" #organization="ngModel"
                                    name="oe" bindLabel="name" bindValue="id" placeholder="Selecciones la Organización"
                                    required>
@@ -102,7 +101,7 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Nombre del Proyecto*</label>
+                        <label>Nombre del Proyecto*</label>
                         <input type="text" class="form-control" [(ngModel)]="item.name" #name="ngModel" required
                                name="np">
                         <error-message *ngIf="name.invalid && name.touched"
@@ -111,7 +110,7 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Drescripción*</label>
+                        <label>Drescripción*</label>
                         <textarea rows="9" class="form-control" [(ngModel)]="item.description" #description="ngModel"
                                   required name="desc"></textarea>
                         <error-message *ngIf="description.invalid && description.touched"
@@ -120,7 +119,7 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Hace parte del plan</label>
+                        <label>Hace parte del plan</label>
                         <select class="form-control" [(ngModel)]="item.hrp" name="hrp">
                           <option *ngFor="let h of hrps;let i=index" value="{{h.id}}">{{h.name}}</option>
                         </select>
@@ -128,9 +127,9 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Contacto en terreno*</label>
+                        <label>Contacto en terreno*</label>
 
-                        <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modalContact(4)" type="button"><i class="fa fa-plus"></i></button>
 
                         <ng-select [items]="contacts" [(ngModel)]="item.contact" #contact="ngModel" name="contact"
@@ -144,12 +143,12 @@
                       <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
                       <div class="col-md-9 col-form-label">
                         <div class="form-check form-check-inline mr-1">
-                          <input class="form-check-input" type="radio" name="int" value="true"
+                          <input class="form-check-input" type="radio" name="int" value="true" id="inline-checkbox1"
                                  [(ngModel)]="item.interagency" [checked]="item.interagency">
                           <label class="form-check-label" for="inline-checkbox1">Si</label>
                         </div>
                         <div class="form-check form-check-inline mr-1">
-                          <input class="form-check-input" type="radio" name="int" value="false"
+                          <input class="form-check-input" type="radio" name="int" value="false" id="inline-checkbox2"
                                  [(ngModel)]="item.interagency" [checked]="!item.interagency">
                           <label class="form-check-label" for="inline-checkbox2">No</label>
                         </div>
@@ -157,19 +156,15 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Implementadores*</label>
-
-                        <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                        <label>Implementadores*</label>
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modal(2)" type="button"><i class="fa fa-plus"></i></button>
-
-
                         <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
                                    bindLabel="name" bindValue="id" placeholder="Seleccione las organizaciones"
                                    [(ngModel)]="item.implementers" #implementers="ngModel" name="imp" required>
                         </ng-select>
                         <error-message *ngIf="item.implementers.length == 0 && implementers.touched"
                                        [message]="implementers.errors | validationError"></error-message>
-                        <!--<error-message *ngIf="item.implementers.length==0 implementers.invalid && implementers.touched" [message]="implementers.errors | validationError"></error-message>-->
                       </div>
                     </div>
 
@@ -178,7 +173,8 @@
                         <div class="card-body">
                           <label>Donantes</label>
 
-                          <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                          <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal"
+                                  data-toggle="modal"
                                   (click)="show_modal(3)" type="button"><i class="fa fa-plus"></i></button>
 
                           <div class="row" *ngFor="let d of item.donors; let i=index">
@@ -324,111 +320,6 @@
       </div>
 
 
-      <!--MODAL-->
-
-      <button type="button" style="visibility: hidden;" id="btn-show-modal" (click)="modal.show(value)"></button>
-      <div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-           aria-hidden="true">
-        <div class="modal-dialog modal-success" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Nueva Organización</h4>
-              <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <input type="text" name="name" [(ngModel)]="organizationitem.name" class="form-control"
-                           placeholder="Nombre">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <input type="text" name="acronym" [(ngModel)]="organizationitem.acronym" class="form-control"
-                           placeholder="Siglas">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-md-12 col-form-label">Tipo de organización</label>
-                  <div class="col-md-12">
-                    <select name="organization_type_id" [(ngModel)]="organizationitem.organization_type_id"
-                            class="form-control">
-                      <option *ngFor="let i of type" value="{{i.id}}">{{i.type}}</option>
-                    </select>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" id="close-modal" (click)="modal.hide()">Cerrar</button>
-              <button type="button" class="btn btn-success" (click)="saveOrUpdate()">Guardar</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
-
-      <!--MODAL CONTACT-->
-
-      <button type="button" style="visibility: hidden;" id="btn-show-modalContact"
-              (click)="modalContact.show(value)"></button>
-      <div bsModal #modalContact="bs-modal" class="modal fade" tabindex="-1" role="dialog"
-           aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-success" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Nuevo Contacto en Terreno</h4>
-              <button type="button" class="close" (click)="modalContact.hide()" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <input type="text" name="first_name" [(ngModel)]="newcontact.first_name" class="form-control"
-                           placeholder="first_name">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <input type="text" name="last_name" [(ngModel)]="newcontact.last_name" class="form-control"
-                           placeholder="last_name">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <input type="text" name="email" [(ngModel)]="newcontact.email" class="form-control"
-                           placeholder="email">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <input type="text" name="twitter" [(ngModel)]="newcontact.twitter" class="form-control"
-                           placeholder="twitter">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-md-12 col-form-label">Grupo de Contacto</label>
-                  <div class="col-md-12">
-                    <select name="organization_type_id" [(ngModel)]="newcontact.contact_group_id" class="form-control">
-                      <option *ngFor="let i of contactsgroups" value="{{i.id}}">{{i.name}}</option>
-                    </select>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" id="close-modalContact" (click)="modalContact.hide()">
-                Cerrar
-              </button>
-              <button type="button" class="btn btn-success" (click)="saveContact()">Guardar</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
     </div>
   </div>
   <div class="card" [ngClass]="{'disabled' : step < 3}">
@@ -454,14 +345,16 @@
               </thead>
               <tbody class="tbody">
               <tr *ngFor="let children of tagschildrenscluster">
-                <td><input type="checkbox" [(ngModel)]="children.selected"><label>{{children.name}}</label></td>
+                <td>
+                  <input type="checkbox" [(ngModel)]="children.selected"><label>{{children.name}}</label></td>
                 <td>
                   <input [disabled]="!children.selected" type="radio" name="mainClusterTag" [(ngModel)]="mainClusterTag"
                          [value]="children.id"> {{children.main}}
                 </td>
                 <td>
                   <input [disabled]="!children.selected" type="number" class="form-control"
-                         [(ngModel)]="children.budget"></td>
+                         [(ngModel)]="children.budget">
+                </td>
               </tr>
               </tbody>
             </table>
@@ -755,7 +648,7 @@
                     <div class="form-group">
                       <label>ORGANIZACIONES BENEFICAS</label>
 
-                      <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                      <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                               (click)="show_modal(5)" type="button"><i class="fa fa-plus"></i></button>
 
                       <ng-select [items]="organizations" [multiple]="true"
@@ -794,4 +687,111 @@
     </div>
   </div>
 
+</div>
+
+
+<!--MODAL-->
+
+<button type="button" style="visibility: hidden;" id="btn-show-modal" (click)="modal.show()"></button>
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Nueva Organización</h4>
+        <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="name" [(ngModel)]="organizationitem.name" class="form-control"
+                     placeholder="Nombre">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="acronym" [(ngModel)]="organizationitem.acronym" class="form-control"
+                     placeholder="Siglas">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-12 col-form-label">Tipo de organización</label>
+            <div class="col-md-12">
+              <select name="organization_type_id" [(ngModel)]="organizationitem.organization_type_id"
+                      class="form-control">
+                <option *ngFor="let i of type" value="{{i.id}}">{{i.type}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modal" (click)="modal.hide()">Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="saveOrUpdate()">Guardar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<!--MODAL CONTACT-->
+
+<button type="button" style="visibility: hidden;" id="btn-show-modalContact"
+        (click)="modalContact.show()"></button>
+<div bsModal #modalContact="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Nuevo Contacto en Terreno</h4>
+        <button type="button" class="close" (click)="modalContact.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="first_name" [(ngModel)]="newcontact.first_name" class="form-control"
+                     placeholder="first_name">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="last_name" [(ngModel)]="newcontact.last_name" class="form-control"
+                     placeholder="last_name">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="email" [(ngModel)]="newcontact.email" class="form-control"
+                     placeholder="email">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input type="text" name="twitter" [(ngModel)]="newcontact.twitter" class="form-control"
+                     placeholder="twitter">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-12 col-form-label">Grupo de Contacto</label>
+            <div class="col-md-12">
+              <select name="organization_type_id" [(ngModel)]="newcontact.contact_group_id" class="form-control">
+                <option *ngFor="let i of contactsgroups" value="{{i.id}}">{{i.name}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modalContact" (click)="modalContact.hide()">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-success" (click)="saveContact()">Guardar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
 </div>

@@ -22,8 +22,6 @@ export class Service {
   }
 
   saveOrUpdate(entity, data) {
-    console.log(entity);
-    console.log(data);
     const url = globals.api + '/' + entity;
     if (data.id == null) {
       return this.http.post( url, JSON.stringify(data), { headers: this.getHeaders() }  )
@@ -75,4 +73,4 @@ export class Service {
     return headers;
   }
 
-} 
+}

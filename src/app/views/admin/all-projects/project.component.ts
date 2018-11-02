@@ -75,8 +75,7 @@ export class ProjectComponent implements OnInit {
       description: ['', Validators.required],
       contact: ['', Validators.required],
       implementers: ['', Validators.required],
-      hrp: ['', Validators.required],
-      //contactId: ['', [Validators.required, Validators.email]]
+      hrp: ['', Validators.required]
     });
     this.route.params.subscribe(params => {
       let id = params['id'];
@@ -130,7 +129,7 @@ export class ProjectComponent implements OnInit {
                   this.recursive_childrens(t);
                   this.shorttags1.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
-                    for (let ts of data.tags)
+                    for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
                         this.item.shorttags1[t.id].push(ta.id);
                       }
@@ -144,7 +143,7 @@ export class ProjectComponent implements OnInit {
                   this.recursive_childrens(t);
                   this.shorttags2.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
-                    for (let ts of data.tags)
+                    for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
                         this.item.shorttags2[t.id].push(ta.id);
                       }
@@ -158,7 +157,7 @@ export class ProjectComponent implements OnInit {
                   this.recursive_childrens(t);
                   this.shorttags3.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
-                    for (let ts of data.tags)
+                    for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
                         this.item.shorttags3[t.id].push(ta.id);
                       }
@@ -172,7 +171,7 @@ export class ProjectComponent implements OnInit {
                   this.recursive_childrens(t);
                   this.shorttags4.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
-                    for (let ts of data.tags)
+                    for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
                         this.item.shorttags4[t.id].push(ta.id);
                       }
@@ -214,8 +213,8 @@ export class ProjectComponent implements OnInit {
                 }
               }
             });
-
           });
+
           if (data.implementers.length > 0) {
             this.item.implementers = [];
             for (let d of data.implementers)
@@ -294,7 +293,6 @@ export class ProjectComponent implements OnInit {
           this.blockUI.stop();
         });
       } else {
-
         this.service.getAll('types').subscribe(data => {
           this.type = data;
         });
@@ -416,7 +414,7 @@ export class ProjectComponent implements OnInit {
       });
       return false;
     }
-    if (this.item.national)
+    if (this.item.national == '1')
       this.item.location = [0];
     else
       this.item.location = this.getItemsSelected(this.regions, 'childrens');
@@ -597,15 +595,12 @@ export class ProjectComponent implements OnInit {
   //MODAL
 
   show_modal(value) {
-
     this.valaddorganization = value;
     document.getElementById('btn-show-modal').click();
   }
 
 
-  saveOrUpdate(tipoorga) {
-
-
+  saveOrUpdate() {
     let finddata: any;
     this.service.saveOrUpdate(this.entity_api, this.organizationitem).subscribe(data => {
       if (data) {
@@ -617,16 +612,9 @@ export class ProjectComponent implements OnInit {
           showConfirmButton: false,
           timer: 1500
         });
-
         this.organizationitem = data.data.id;
-        // this.itemorganizationitem = new Organizations();
-        //this.data = null;
         document.getElementById('close-modal').click();
-
-
         this.syncorganizations(this.valaddorganization);
-
-
       } else {
         Swal({
           position: 'top-end',
@@ -643,16 +631,11 @@ export class ProjectComponent implements OnInit {
   }
 
   syncorganizations(tipoorganization) {
-
+    this.blockUI.start('');
     if (tipoorganization == 1 || tipoorganization == 2 || tipoorganization == 3 || tipoorganization == 5) {
-
-
       this.service.getAll('organizations').subscribe((organizations) => {
-
         this.organizations = organizations;
-
         let index = this.organizations.find(org => org.id === this.organizationitem);
-
         if (tipoorganization == 1) {
           this.item.organization = index.id;
           this.organizationitem = new Organizations();
@@ -665,37 +648,28 @@ export class ProjectComponent implements OnInit {
           this.item.beneficiaries.organizations.push(index.id);
           this.organizationitem = new Organizations();
         }
-
-
+        this.blockUI.stop();
       });
     } else if (tipoorganization == 4) {
-
-      this.service.getAll('contacts').subscribe(contacts => {
+      let tipocontacto = tipoorganization;
+      this.service.getAll('contacts').subscribe((contacts) => {
         this.contacts = contacts;
         let indexcontact = this.contacts.find(cont => cont.id === this.newcontact);
-
-        if (tipoorganization == 4) {
+        if (tipocontacto == 4) {
           this.item.contact = indexcontact.id;
-
           this.newcontact = new Contacts();
-
         }
+        this.blockUI.stop();
       });
-
     }
   }
-
 
   show_modalContact(value) {
     this.valaddorganization = value;
     document.getElementById('btn-show-modalContact').click();
   }
 
-
   saveContact() {
-    this.syncorganizations(this.valaddorganization);
-
-
     this.service.saveOrUpdate(this.entity_contacts, this.newcontact).subscribe(data => {
       if (data) {
         Swal({
@@ -705,18 +679,9 @@ export class ProjectComponent implements OnInit {
           showConfirmButton: false,
           timer: 1500
         });
-
-
-        // this.itemorganizationitem = new Organizations();
-        //this.data = null;
-
         this.newcontact = data.data.id;
         document.getElementById('close-modalContact').click();
-
-
         this.syncorganizations(this.valaddorganization);
-
-
       } else {
         Swal({
           position: 'top-end',
@@ -726,8 +691,6 @@ export class ProjectComponent implements OnInit {
           timer: 1500
         });
       }
-
-
     });
 
   }
