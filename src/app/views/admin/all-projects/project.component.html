@@ -20,37 +20,48 @@
                   <div class="row p15">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="codigo">Código<strong>*</strong></label>
-                        <input id="codigo" type="text" class="form-control" [(ngModel)]="item.code" name="code" required
-                               #code="ngModel">
-                        <error-message *ngIf="code.invalid && (code.dirty || code.touched)"
+                        <label for="Codigo">Código*</label>
+                        <input type="text" class="form-control" [(ngModel)]="item.code" #code="ngModel" name="code"
+                               required>
+
+                        <error-message *ngIf="code.invalid && code.touched"
                                        [message]="code.errors | validationError"></error-message>
+
                       </div>
                     </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="costo">Costo</label>
-                        <input id="costo" type="number" class="form-control" [(ngModel)]="item.cost" #c="ngModel"
-                               pattern="\d+" name="cost">
-                        <error-message *ngIf="c.invalid && (c.dirty || c.touched)"
-                                       [message]="c.errors | validationError"></error-message>
-                      </div>
-                    </div>
+
                     <div class="col-md-12">
                       <div class="card">
                         <div class="card-body">
                           <div class="form-group" *ngFor="let b of item.budget; let i=index">
-                            <label for="presupuesto">Presupuesto {{i== 0 ? 'Total' : 'Año ' + i}}</label>
-                            <input type="number" class="form-control" [(ngModel)]="item.budget[i].value"
-                                   name="name{{i}}" placeholder="USD$" #b="ngModel" pattern="\d+">
-                            <error-message *ngIf="b.invalid && b.touched"
-                                           [message]="b.errors | validationError"></error-message>
+                            <label for="Presupuesto">
+
+                              <span *ngIf="b.id == 0">Presupuesto Total*</span>
+                              <span *ngIf="b.id == 99">Valor por persona</span>
+                              <span *ngIf="b.id != 0 && b.id != 99">Presupuesto año {{i}}</span></label>
+                            <div *ngIf="b.id == 0">
+                              <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="presu"
+                                     placeholder="USD$" pattern="\d+" #presu="ngModel" required>
+                              <error-message *ngIf="presu.invalid && presu.touched"
+                                             [message]="presu.errors | validationError"></error-message>
+                            </div>
+                            <div *ngIf="b.id == 99">
+                              <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="vp"
+                                     placeholder="USD$" pattern="\d+" #vp="ngModel" required>
+                              <error-message *ngIf="vp.invalid && vp.touched"
+                                             [message]="vp.errors | validationError"></error-message>
+                            </div>
+
+                            <input *ngIf="b.id != 0 && b.id != 99" type="number" class="form-control"
+                                   [(ngModel)]="item.budget[i].value" name="pres{{i}}" placeholder="USD$" pattern="\d+">
+
+
                           </div>
                           <div class="form-group mb0">
-                            <button class="btn btn-outline-success btn-sm mr5" (click)="addP()">
+                            <button type="button" class="btn btn-outline-success btn-sm mr5" (click)="addP()">
                               <i class="fa fa-plus"></i>&nbsp;Añadir
                             </button>
-                            <button class="btn btn-outline-danger btn-sm" (click)="removeP()">
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeP()">
                               <i class="fa fa-trash"></i>&nbsp;Borrar
                             </button>
                           </div>
@@ -59,31 +70,52 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" placeholder="Fecha de incio" class="form-control" bsDatepicker
-                               [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}">
+                        <input type="text" placeholder="Fecha de incio*" class="form-control" bsDatepicker
+                               [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}" required
+                               name="fi">
+                        <error-message *ngIf="!item.date_start" [message]="'Este campo es requerido'"></error-message>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" placeholder="Fecha de final" class="form-control" bsDatepicker
-                               [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}">
+                        <input type="text" placeholder="Fecha de final*" class="form-control" bsDatepicker
+                               [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}" required
+                               name="ff">
+                        <error-message *ngIf="!item.date_end" [message]="'Este campo es requerido'"></error-message>
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Organización ejecutora</label>
-                        <ng-select [items]="organizations" [(ngModel)]="item.organization" name="oe" bindLabel="name"
-                                   bindValue="id" placeholder="Selecciones la Organización">
+                        <label for="name">Organización ejecutora*</label>
+
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                                (click)="show_modal(1)" type="button"><i class="fa fa-plus"></i></button>
+
+
+                        <ng-select [items]="organizations" [(ngModel)]="item.organization" #organization="ngModel"
+                                   name="oe" bindLabel="name" bindValue="id" placeholder="Selecciones la Organización"
+                                   required>
                         </ng-select>
+                        <error-message *ngIf="organization.invalid && organization.touched"
+                                       [message]="organization.errors | validationError"></error-message>
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Nombre del Proyecto<strong>*</strong></label>
+                        <label for="name">Nombre del Proyecto*</label>
                         <input type="text" class="form-control" [(ngModel)]="item.name" #name="ngModel" required
                                name="np">
                         <error-message *ngIf="name.invalid && name.touched"
                                        [message]="name.errors | validationError"></error-message>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="name">Drescripción*</label>
+                        <textarea rows="9" class="form-control" [(ngModel)]="item.description" #description="ngModel"
+                                  required name="desc"></textarea>
+                        <error-message *ngIf="description.invalid && description.touched"
+                                       [message]="description.errors | validationError"></error-message>
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -96,10 +128,16 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Contacto en terreno</label>
-                        <ng-select [items]="contacts" [(ngModel)]="item.contact" name="contact" bindLabel="name"
-                                   bindValue="id" placeholder="Seleccione el contacto">
+                        <label for="name">Contacto en terreno*</label>
+
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                                (click)="show_modalContact(4)" type="button"><i class="fa fa-plus"></i></button>
+
+                        <ng-select [items]="contacts" [(ngModel)]="item.contact" #contact="ngModel" name="contact"
+                                   bindLabel="name" bindValue="id" placeholder="Seleccione el contacto" required>
                         </ng-select>
+                        <error-message *ngIf="contact.invalid && contact.touched"
+                                       [message]="contact.errors | validationError"></error-message>
                       </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -119,23 +157,30 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="name">Implementadores</label>
+                        <label for="name">Implementadores*</label>
+
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                                (click)="show_modal(2)" type="button"><i class="fa fa-plus"></i></button>
+
+
                         <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
                                    bindLabel="name" bindValue="id" placeholder="Seleccione las organizaciones"
-                                   [(ngModel)]="item.implementers" name="imp">
+                                   [(ngModel)]="item.implementers" #implementers="ngModel" name="imp" required>
                         </ng-select>
+                        <error-message *ngIf="item.implementers.length == 0 && implementers.touched"
+                                       [message]="implementers.errors | validationError"></error-message>
+                        <!--<error-message *ngIf="item.implementers.length==0 implementers.invalid && implementers.touched" [message]="implementers.errors | validationError"></error-message>-->
                       </div>
                     </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="name">Drescripción</label>
-                        <textarea rows="9" class="form-control" [(ngModel)]="item.description" name="desc"></textarea>
-                      </div>
-                    </div>
+
                     <div class="col-md-12">
                       <div class="card mb0">
                         <div class="card-body">
                           <label>Donantes</label>
+
+                          <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                                  (click)="show_modal(3)" type="button"><i class="fa fa-plus"></i></button>
+
                           <div class="row" *ngFor="let d of item.donors; let i=index">
                             <div class="col-md-6">
                               <div class="form-group">
@@ -151,10 +196,10 @@
                             </div>
                           </div>
                           <div class="form-group mb0">
-                            <button class="btn btn-outline-success btn-sm mr5" (click)="addD()">
+                            <button type="button" class="btn btn-outline-success btn-sm mr5" (click)="addD()">
                               <i class="fa fa-plus"></i>&nbsp;Añadir
                             </button>
-                            <button class="btn btn-outline-danger btn-sm" (click)="removeD()">
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeD()">
                               <i class="fa fa-trash"></i>&nbsp;Borrar
                             </button>
                           </div>
@@ -171,12 +216,13 @@
                 <div class="card-body">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Proyecto es de cobertura nacional</label>
+                      <label>Proyecto es de cobertura nacional*</label>
                       <select id="select" name="select" [(ngModel)]="item.national" class="form-control"
-                              (change)="updateNacional($event.target.value)">
+                              (change)="updateNacional($event.target.value)" required>
                         <option value="1">Si</option>
                         <option value="0">No</option>
                       </select>
+
                     </div>
                   </div>
                   <div id="div1" [ngClass]="{'hide' : item.national == '1'}">
@@ -206,6 +252,37 @@
                 </div>
               </div>
             </div>
+
+            <!--SHORT TABS-->
+            <div class="col-md-6" *ngFor="let st of shorttags1; let i=index ">
+              <div class="card-header card-padding-5" *ngIf="st.tab == 1">
+                <label class="font-weight-bold label-title">{{st.name}}</label>
+                <div class="col-sm-12 col-md-12">
+                  <div class="card">
+                    <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags1[st.id]" name="tag{{i}}"
+                               [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
+                               bindLabel="name" bindValue="id"></ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="row">
+            <!--SHORT TAGS-->
+            <div class="col-md-6 class-tags" *ngFor="let st of shorttags1; let i=index">
+              <div class="card-header card-padding-5">
+                <label class="font-weight-bold label-title">{{st.name}}</label>
+                <div class="col-sm-12 col-md-12">
+                  <div class="card">
+                    <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags1[st.id]" name="tag{{i}}"
+                               [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
+                               bindLabel="name" bindValue="id"></ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-footer">
@@ -215,18 +292,158 @@
     </form>
   </div>
   <div class="card" [ngClass]="{'disabled' : step < 2}">
-    <div class="card-header" id="headingTwo">
+    <div class="card-header" id="headingPresupuesto">
       <h5 class="mb-0">
         <a class="btn btn-link" (click)="changeStatusCollapse(2)">
+          Presupuesto
+        </a>
+      </h5>
+    </div>
+    <div id="collapsePresupuesto" class="collapse"
+         [ngClass]="{'show' :collapsedSelected == 2 && isCollapsed && step >= 2}"
+         aria-labelledby="headingPresupuesto" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row">
+          <!--SHORT TAGS-->
+          <div class="col-md-6 class-tags" *ngFor="let st of shorttags2; let i=index">
+            <div class="card-header card-padding-5">
+              <label class="font-weight-bold label-title">{{st.name}}</label>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags2[st.id]" name="tag{{i}}"
+                             [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
+                             bindLabel="name" bindValue="id"></ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary" (click)="savePresu()">Guardar y seguir</button>
+      </div>
+
+
+      <!--MODAL-->
+
+      <button type="button" style="visibility: hidden;" id="btn-show-modal" (click)="modal.show(value)"></button>
+      <div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-success" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Nueva Organización</h4>
+              <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <input type="text" name="name" [(ngModel)]="organizationitem.name" class="form-control"
+                           placeholder="Nombre">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <input type="text" name="acronym" [(ngModel)]="organizationitem.acronym" class="form-control"
+                           placeholder="Siglas">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-12 col-form-label">Tipo de organización</label>
+                  <div class="col-md-12">
+                    <select name="organization_type_id" [(ngModel)]="organizationitem.organization_type_id"
+                            class="form-control">
+                      <option *ngFor="let i of type" value="{{i.id}}">{{i.type}}</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="close-modal" (click)="modal.hide()">Cerrar</button>
+              <button type="button" class="btn btn-success" (click)="saveOrUpdate()">Guardar</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+
+      <!--MODAL CONTACT-->
+
+      <button type="button" style="visibility: hidden;" id="btn-show-modalContact"
+              (click)="modalContact.show(value)"></button>
+      <div bsModal #modalContact="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+           aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-success" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Nuevo Contacto en Terreno</h4>
+              <button type="button" class="close" (click)="modalContact.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <input type="text" name="first_name" [(ngModel)]="newcontact.first_name" class="form-control"
+                           placeholder="first_name">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <input type="text" name="last_name" [(ngModel)]="newcontact.last_name" class="form-control"
+                           placeholder="last_name">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <input type="text" name="email" [(ngModel)]="newcontact.email" class="form-control"
+                           placeholder="email">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <input type="text" name="twitter" [(ngModel)]="newcontact.twitter" class="form-control"
+                           placeholder="twitter">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-12 col-form-label">Grupo de Contacto</label>
+                  <div class="col-md-12">
+                    <select name="organization_type_id" [(ngModel)]="newcontact.contact_group_id" class="form-control">
+                      <option *ngFor="let i of contactsgroups" value="{{i.id}}">{{i.name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="close-modalContact" (click)="modalContact.hide()">
+                Cerrar
+              </button>
+              <button type="button" class="btn btn-success" (click)="saveContact()">Guardar</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+    </div>
+  </div>
+  <div class="card" [ngClass]="{'disabled' : step < 3}">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <a class="btn btn-link" (click)="changeStatusCollapse(3)">
           Clasificaciones
         </a>
       </h5>
     </div>
-    <div id="collapseTwo" class="collapse" [ngClass]="{'show' :collapsedSelected == 2 && isCollapsed && step >= 2}"
+    <div id="collapseTwo" class="collapse" [ngClass]="{'show' :collapsedSelected == 3 && isCollapsed && step >= 3}"
          aria-labelledby="headingTwo" data-parent="#accordion">
       <div class="card-body">
         <div class="row p15">
-          <!--<div class="col-md-12">
+          <div class="col-md-12">
             <table class="table table-bordered table-striped table-sm">
               <thead>
               <tr>
@@ -236,61 +453,22 @@
               </tr>
               </thead>
               <tbody class="tbody">
-              <tr>
-                <td><input type="checkbox"><label>Agua, saneamiento e higiene (WASH)</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Alojamiento y ayuda no alimentaria</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Coordinación</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Educación en emergencia (EeE)</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Ningún cluster</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Protección</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Recuperación Temprana</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Salud</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Seguridad alimentaria y nutrición (SAN)</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"><label>Telecomunicaciones en emergencias</label></td>
-                <td><input type="radio" name="radio1"></td>
-                <td><input type="number" class="form-control"></td>
+              <tr *ngFor="let children of tagschildrenscluster">
+                <td><input type="checkbox" [(ngModel)]="children.selected"><label>{{children.name}}</label></td>
+                <td>
+                  <input [disabled]="!children.selected" type="radio" name="mainClusterTag" [(ngModel)]="mainClusterTag"
+                         [value]="children.id"> {{children.main}}
+                </td>
+                <td>
+                  <input [disabled]="!children.selected" type="number" class="form-control"
+                         [(ngModel)]="children.budget"></td>
               </tr>
               </tbody>
             </table>
-          </div>-->
-          <div class="col-md-6" *ngFor="let t of tags;let i=index">
-            <div class="card-header card-padding-5"><label class="font-weight-bold label-title">{{t.name}}</label>
+          </div>
+          <div class="col-md-6 class-tags" *ngFor="let t of tags;let i=index ">
+            <div class="card-header card-padding-5">
+              <label class="font-weight-bold label-title">{{t.name}}</label>
               <div class="col-sm-12 col-md-12">
                 <div class="card">
                   <ng-select [items]="t.childrens" [(ngModel)]="item.tags[t.id]" name="tag{{i}}" [multiple]="true"
@@ -300,22 +478,36 @@
               </div>
             </div>
           </div>
+
+          <!--SHORT TAGS-->
+          <div class="col-md-6 class-tags" *ngFor="let st of shorttags3; let i=index">
+            <div class="card-header card-padding-5">
+              <label class="font-weight-bold label-title">{{st.name}}</label>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags3[st.id]" name="tag{{i}}"
+                             [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
+                             bindLabel="name" bindValue="id"></ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="step2()">Guardar y seguir</button>
+        <button type="button" class="btn btn-primary" (click)="saveClasif()">Guardar y seguir</button>
       </div>
     </div>
   </div>
-  <div class="card" [ngClass]="{'disabled' : step < 3}">
+  <div class="card" [ngClass]="{'disabled' : step < 4}">
     <div class="card-header" id="headingThree">
       <h5 class="mb-0">
-        <a class="btn btn-link" (click)="changeStatusCollapse(3)">
+        <a class="btn btn-link" (click)="changeStatusCollapse(4)">
           Beneficiarios
         </a>
       </h5>
     </div>
-    <div id="collapseThree" class="collapse" [ngClass]="{'show' :collapsedSelected == 3 && isCollapsed && step >= 2}"
+    <div id="collapseThree" class="collapse" [ngClass]="{'show' :collapsedSelected == 4 && isCollapsed && step >= 4}"
          aria-labelledby="headingThree" data-parent="#accordion">
       <div class="card-body">
         <div class="row">
@@ -562,6 +754,10 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>ORGANIZACIONES BENEFICAS</label>
+
+                      <button class="btn btn-success btn-square btn-new btn-sm mr5" data-toggle="modal"
+                              (click)="show_modal(5)" type="button"><i class="fa fa-plus"></i></button>
+
                       <ng-select [items]="organizations" [multiple]="true"
                                  [(ngModel)]="item.beneficiaries.organizations" name="org" [closeOnSelect]="false"
                                  [searchable]="true"
@@ -574,11 +770,28 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <!--SHORT TAGS-->
+          <div class="col-md-6 class-tags" *ngFor="let st of shorttags4; let i=index">
+            <div class="card-header card-padding-5">
+              <label class="font-weight-bold label-title">{{st.name}}</label>
+              <div class="col-sm-12 col-md-12">
+                <div class="card">
+                  <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags4[st.id]" name="tag{{i}}"
+                             [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
+                             bindLabel="name" bindValue="id"></ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="step3()">Guardar</button>
-        <button type="button" class="btn btn-primary ml-15" (click)="step3(true)">Guardar y salir</button>
+        <button type="button" class="btn btn-primary" (click)="saveBenef()">Guardar</button>
+        <button type="button" class="btn btn-primary ml-15" (click)="saveBenef(true)">Guardar y salir</button>
       </div>
     </div>
   </div>
+
 </div>

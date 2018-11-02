@@ -22,6 +22,8 @@ export class Service {
   }
 
   saveOrUpdate(entity, data) {
+    console.log(entity);
+    console.log(data);
     const url = globals.api + '/' + entity;
     if (data.id == null) {
       return this.http.post( url, JSON.stringify(data), { headers: this.getHeaders() }  )
@@ -44,8 +46,11 @@ export class Service {
     });
   }
 
-  getRequest(entity) {
-    const url = globals.api + '/' + entity;
+  getRequest(entity, id) {
+    let url = globals.api + '/' + entity;
+    if(id != null){
+      url = globals.api + '/' + entity+ '/' + id;
+    }
     return this.http.get(url, { headers: this.getHeaders() }).pipe(map((response: any) => response.json()));
   }
 
