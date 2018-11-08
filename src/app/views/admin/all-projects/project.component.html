@@ -68,25 +68,28 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <input type="text" placeholder="Fecha de incio*" class="form-control" bsDatepicker
-                               [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}" required
-                               name="fi">
-                        <error-message *ngIf="!item.date_start" [message]="'Este campo es requerido'"></error-message>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <input type="text" placeholder="Fecha de final*" class="form-control" bsDatepicker
-                               [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}" required
-                               name="ff">
-                        <error-message *ngIf="!item.date_end" [message]="'Este campo es requerido'"></error-message>
-                      </div>
+                    <div class="col-md-12">
+                        <label>Fechas</label>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="text" placeholder="Fecha de inicio*" class="form-control" bsDatepicker
+                                   [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}" required
+                                   name="fi">
+                            <error-message *ngIf="!item.date_start" [message]="'Este campo es requerido'"></error-message>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="text" placeholder="Fecha final*" class="form-control" bsDatepicker
+                                   [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}" required
+                                   name="ff">
+                            <error-message *ngIf="!item.date_end" [message]="'Este campo es requerido'"></error-message>
+                          </div>
+                        </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Organización ejecutora*</label>
+                        <label>Ejecutora*</label>
                         <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modal(1)" type="button">
                           <i class="fa fa-plus"></i>
@@ -101,7 +104,7 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Nombre del Proyecto*</label>
+                        <label>Nombre*</label>
                         <input type="text" class="form-control" [(ngModel)]="item.name" #name="ngModel" required
                                name="np">
                         <error-message *ngIf="name.invalid && name.touched"
@@ -110,19 +113,11 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Drescripción*</label>
+                        <label>Descripción*</label>
                         <textarea rows="9" class="form-control" [(ngModel)]="item.description" #description="ngModel"
                                   required name="desc"></textarea>
                         <error-message *ngIf="description.invalid && description.touched"
                                        [message]="description.errors | validationError"></error-message>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Hace parte del plan</label>
-                        <select class="form-control" [(ngModel)]="item.hrp" name="hrp">
-                          <option *ngFor="let h of hrps;let i=index" value="{{h.id}}">{{h.name}}</option>
-                        </select>
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -139,24 +134,9 @@
                                        [message]="contact.errors | validationError"></error-message>
                       </div>
                     </div>
-                    <div class="form-group col-md-12">
-                      <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
-                      <div class="col-md-9 col-form-label">
-                        <div class="form-check form-check-inline mr-1">
-                          <input class="form-check-input" type="radio" name="int" value="true" id="inline-checkbox1"
-                                 [(ngModel)]="item.interagency" [checked]="item.interagency">
-                          <label class="form-check-label" for="inline-checkbox1">Si</label>
-                        </div>
-                        <div class="form-check form-check-inline mr-1">
-                          <input class="form-check-input" type="radio" name="int" value="false" id="inline-checkbox2"
-                                 [(ngModel)]="item.interagency" [checked]="!item.interagency">
-                          <label class="form-check-label" for="inline-checkbox2">No</label>
-                        </div>
-                      </div>
-                    </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Implementadores*</label>
+                        <label>Implementadoras*</label>
                         <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modal(2)" type="button"><i class="fa fa-plus"></i></button>
                         <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"
@@ -406,7 +386,7 @@
         <div class="row">
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header"><label><strong>POBLACIONALES</strong></label>
+              <div class="card-header"><label><strong>POBLACIONALES DIRECTOS</strong></label>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -542,7 +522,7 @@
           </div>
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header"><label><strong>INDIRECTOS</strong></label>
+              <div class="card-header"><label><strong>POBLACIONALES INDIRECTOS</strong></label>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -646,7 +626,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>ORGANIZACIONES BENEFICAS</label>
+                      <label>Organizaciones beneficiarias</label>
 
                       <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                               (click)="show_modal(5)" type="button"><i class="fa fa-plus"></i></button>
