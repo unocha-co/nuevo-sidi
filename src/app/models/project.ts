@@ -6,7 +6,7 @@ export class Project {
     this.hrp = 1;
     this.contact = 1;
     this.tags = {};
-    this.shorttags1 = {};
+    this.shorttags1 = {}; 
     this.shorttags2 = {};
     this.shorttags3 = {};
     this.shorttags4 = {};
@@ -60,12 +60,15 @@ export class Project {
   budget: any;
   date_start: any = new Date();
   date_end: any = new Date();
+  date_budget: any = new Date();
   organization: number;
   name: string;
   hrp: number;
   interagency: boolean;
   implementers: any;
   description: string;
+  documents:string;
+  span:string; //duracion meses
   donors: any;
   national: string;
   location: any;

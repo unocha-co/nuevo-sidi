@@ -7,12 +7,13 @@ import { LoginComponent } from './views/login/login.component';
 import {CallBackAuth0} from './views/callback_auth0/callback.component'
 import {AuthGuardService} from './auth/auth-guard.service';
 
+
 export const routes: Routes = [
-  {
+   {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',
-    canActivate: [ AuthGuardService ] 
+    canActivate: [ AuthGuardService ] ,
   },
   {
     path: 'login',
@@ -38,7 +39,7 @@ export const routes: Routes = [
       {
         path: 'admin',
         loadChildren: './views/admin/admin.module#AdminModule',
-        canActivate: [ AuthGuardService ] 
+        canActivate: [ AuthGuardService ]
       }
     ]
   }

@@ -181,6 +181,9 @@ input[type='checkbox']{
 
 .class-tags{
   margin-bottom: 10px;
+  .card-header{
+    border-radius: 5px !important;
+  }
 }
 .btn-add-modal{
   border-radius: 20px;

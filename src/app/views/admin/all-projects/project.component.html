@@ -8,65 +8,44 @@
           </a>
         </h5>
       </div>
-
       <div id="collapseOne" class="collapse" [ngClass]="{'show' :collapsedSelected == 1 && isCollapsed}"
            aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
               <div class="card">
-                <div class="card-header">PROYECTOS</div>
+                <div class="card-header">BÁSICA</div>
                 <div class="card-body">
                   <div class="row p15">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="Codigo">Código*</label>
+                        <label>Código*</label>
                         <input type="text" class="form-control" [(ngModel)]="item.code" #code="ngModel" name="code"
                                required>
-
                         <error-message *ngIf="code.invalid && code.touched"
                                        [message]="code.errors | validationError"></error-message>
-
                       </div>
                     </div>
-
                     <div class="col-md-12">
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="form-group" *ngFor="let b of item.budget; let i=index">
-                            <label for="Presupuesto">
-
-                              <span *ngIf="b.id == 0">Presupuesto Total*</span>
-                              <span *ngIf="b.id == 99">Valor por persona</span>
-                              <span *ngIf="b.id != 0 && b.id != 99">Presupuesto año {{i}}</span></label>
-                            <div *ngIf="b.id == 0">
-                              <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="presu"
-                                     placeholder="USD$" pattern="\d+" #presu="ngModel" required>
-                              <error-message *ngIf="presu.invalid && presu.touched"
-                                             [message]="presu.errors | validationError"></error-message>
-                            </div>
-                            <div *ngIf="b.id == 99">
-                              <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="vp"
-                                     placeholder="USD$" pattern="\d+" #vp="ngModel" required>
-                              <error-message *ngIf="vp.invalid && vp.touched"
-                                             [message]="vp.errors | validationError"></error-message>
-                            </div>
-
-                            <input *ngIf="b.id != 0 && b.id != 99" type="number" class="form-control"
-                                   [(ngModel)]="item.budget[i].value" name="pres{{i}}" placeholder="USD$" pattern="\d+">
-
-
-                          </div>
-                          <div class="form-group mb0">
-                            <button type="button" class="btn btn-outline-success btn-sm mr5" (click)="addP()">
-                              <i class="fa fa-plus"></i>&nbsp;Añadir
-                            </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeP()">
-                              <i class="fa fa-trash"></i>&nbsp;Borrar
-                            </button>
-                          </div>
-                        </div>
+                      <div class="form-group">
+                        <label>Nombre del Proyecto*</label>
+                        <input type="text" class="form-control" [(ngModel)]="item.name" #name="ngModel" required
+                               name="np">
+                        <error-message *ngIf="name.invalid && name.touched"
+                                       [message]="name.errors | validationError"></error-message>
                       </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label>Descripción*</label>
+                        <textarea rows="9" class="form-control" [(ngModel)]="item.description" #description="ngModel"
+                                  required name="desc"></textarea>
+                        <error-message *ngIf="description.invalid && description.touched"
+                                       [message]="description.errors | validationError"></error-message>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <label>Fechas*</label>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
@@ -78,12 +57,54 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" placeholder="Fecha de final*" class="form-control" bsDatepicker
-                               [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}" required
-                               name="ff">
+                        <input type="text" placeholder="Fecha de final*" class="form-control" bsDatepicker name="ff"
+                               [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}" required>
                         <error-message *ngIf="!item.date_end" [message]="'Este campo es requerido'"></error-message>
                       </div>
                     </div>
+                    <div class="col-md-6">
+                      <label>Fecha de adjudicación de recursos</label>
+                      <div class="form-group">
+                        <input type="text" placeholder="Fecha de adjudicación de recursos" class="form-control"
+                               bsDatepicker required name="ff"
+                               [(bsValue)]="item.date_budget" value="{{ item.date_budget | date:'yyyy-MM-dd' }}">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Duración en meses*</label>
+                      <div class="form-group">
+                        <input type="number" class="form-control" [(ngModel)]="item.span" #span="ngModel" name="span"
+                               required>
+                        <error-message *ngIf="span.invalid && span.touched"
+                                       [message]="span.errors | validationError"></error-message>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Contacto en terreno*</label>
+                        <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
+                                (click)="show_modalContact(4)" type="button"><i class="fa fa-plus"></i></button>
+                        <ng-select [items]="contacts" [(ngModel)]="item.contact" #contact="ngModel" name="contact"
+                                   bindLabel="name" bindValue="id" placeholder="Seleccione el contacto" required>
+                        </ng-select>
+                        <error-message *ngIf="contact.invalid && contact.touched"
+                                       [message]="contact.errors | validationError"></error-message>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>URL soportes del proyecto</label>
+                        <input type="text" class="form-control" [(ngModel)]="item.documents" #name="ngModel"
+                               name="documents">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">ORGANIZACIONES</div>
+                <div class="card-body">
+                  <div class="row p15">
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Organización ejecutora*</label>
@@ -101,61 +122,6 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Nombre del Proyecto*</label>
-                        <input type="text" class="form-control" [(ngModel)]="item.name" #name="ngModel" required
-                               name="np">
-                        <error-message *ngIf="name.invalid && name.touched"
-                                       [message]="name.errors | validationError"></error-message>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Drescripción*</label>
-                        <textarea rows="9" class="form-control" [(ngModel)]="item.description" #description="ngModel"
-                                  required name="desc"></textarea>
-                        <error-message *ngIf="description.invalid && description.touched"
-                                       [message]="description.errors | validationError"></error-message>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Hace parte del plan</label>
-                        <select class="form-control" [(ngModel)]="item.hrp" name="hrp">
-                          <option *ngFor="let h of hrps;let i=index" value="{{h.id}}">{{h.name}}</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Contacto en terreno*</label>
-
-                        <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
-                                (click)="show_modalContact(4)" type="button"><i class="fa fa-plus"></i></button>
-
-                        <ng-select [items]="contacts" [(ngModel)]="item.contact" #contact="ngModel" name="contact"
-                                   bindLabel="name" bindValue="id" placeholder="Seleccione el contacto" required>
-                        </ng-select>
-                        <error-message *ngIf="contact.invalid && contact.touched"
-                                       [message]="contact.errors | validationError"></error-message>
-                      </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                      <label>¿Es un proyecto que cumple los requisitos de interagencialidad?</label>
-                      <div class="col-md-9 col-form-label">
-                        <div class="form-check form-check-inline mr-1">
-                          <input class="form-check-input" type="radio" name="int" value="true" id="inline-checkbox1"
-                                 [(ngModel)]="item.interagency" [checked]="item.interagency">
-                          <label class="form-check-label" for="inline-checkbox1">Si</label>
-                        </div>
-                        <div class="form-check form-check-inline mr-1">
-                          <input class="form-check-input" type="radio" name="int" value="false" id="inline-checkbox2"
-                                 [(ngModel)]="item.interagency" [checked]="!item.interagency">
-                          <label class="form-check-label" for="inline-checkbox2">No</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
                         <label>Implementadores*</label>
                         <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modal(2)" type="button"><i class="fa fa-plus"></i></button>
@@ -167,16 +133,13 @@
                                        [message]="implementers.errors | validationError"></error-message>
                       </div>
                     </div>
-
                     <div class="col-md-12">
                       <div class="card mb0">
                         <div class="card-body">
                           <label>Donantes</label>
-
                           <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal"
                                   data-toggle="modal"
                                   (click)="show_modal(3)" type="button"><i class="fa fa-plus"></i></button>
-
                           <div class="row" *ngFor="let d of item.donors; let i=index">
                             <div class="col-md-6">
                               <div class="form-group">
@@ -248,33 +211,17 @@
                 </div>
               </div>
             </div>
-
-            <!--SHORT TABS-->
-            <div class="col-md-6" *ngFor="let st of shorttags1; let i=index ">
-              <div class="card-header card-padding-5" *ngIf="st.tab == 1">
-                <label class="font-weight-bold label-title">{{st.name}}</label>
-                <div class="col-sm-12 col-md-12">
-                  <div class="card">
-                    <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags1[st.id]" name="tag{{i}}"
-                               [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
-                               bindLabel="name" bindValue="id"></ng-select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
           </div>
           <div class="row">
-            <!--SHORT TAGS-->
             <div class="col-md-6 class-tags" *ngFor="let st of shorttags1; let i=index">
               <div class="card-header card-padding-5">
                 <label class="font-weight-bold label-title">{{st.name}}</label>
                 <div class="col-sm-12 col-md-12">
                   <div class="card">
                     <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags1[st.id]" name="tag{{i}}"
-                               [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
-                               bindLabel="name" bindValue="id"></ng-select>
+                               [multiple]="(st.type == 2)" [closeOnSelect]="(st.type != 2)" [searchable]="true"
+                               placeholder="Seleccione" bindLabel="name" bindValue="id">
+                    </ng-select>
                   </div>
                 </div>
               </div>
@@ -291,7 +238,7 @@
     <div class="card-header" id="headingPresupuesto">
       <h5 class="mb-0">
         <a class="btn btn-link" (click)="changeStatusCollapse(2)">
-          Presupuesto
+          Presupuestos
         </a>
       </h5>
     </div>
@@ -300,15 +247,51 @@
          aria-labelledby="headingPresupuesto" data-parent="#accordion">
       <div class="card-body">
         <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="form-group" *ngFor="let b of item.budget; let i=index">
+                  <label>
+                    <span *ngIf="b.id == 0">Presupuesto total*</span>
+                    <span *ngIf="b.id == 99">Presupuesto por persona</span>
+                    <span *ngIf="b.id != 0 && b.id != 99">Presupuesto año {{i-1}}</span></label>
+                  <div *ngIf="b.id == 0">
+                    <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="presu"
+                           placeholder="USD$" pattern="\d+" #presu="ngModel" required>
+                    <error-message *ngIf="presu.invalid && presu.touched"
+                                   [message]="presu.errors | validationError"></error-message>
+                  </div>
+                  <div *ngIf="b.id == 99">
+                    <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="vp"
+                           placeholder="USD$" pattern="\d+" #vp="ngModel" required>
+                    <error-message *ngIf="vp.invalid && vp.touched"
+                                   [message]="vp.errors | validationError"></error-message>
+                  </div>
+                  <input *ngIf="b.id != 0 && b.id != 99" type="number" class="form-control"
+                         [(ngModel)]="item.budget[i].value" name="pres{{i}}" placeholder="USD$" pattern="\d+">
+                </div>
+                <div class="form-group mb0">
+                  <button type="button" class="btn btn-outline-success btn-sm mr5" (click)="addP()">
+                    <i class="fa fa-plus"></i>&nbsp;Añadir
+                  </button>
+                  <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeP()">
+                    <i class="fa fa-trash"></i>&nbsp;Borrar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
           <!--SHORT TAGS-->
-          <div class="col-md-6 class-tags" *ngFor="let st of shorttags2; let i=index">
-            <div class="card-header card-padding-5">
-              <label class="font-weight-bold label-title">{{st.name}}</label>
-              <div class="col-sm-12 col-md-12">
-                <div class="card">
-                  <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags2[st.id]" name="tag{{i}}"
-                             [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
-                             bindLabel="name" bindValue="id"></ng-select>
+          <div class="col-md-6">
+            <div class="col-md-12 class-tags" *ngFor="let st of shorttags2; let i=index">
+              <div class="card-header card-padding-5">
+                <label class="font-weight-bold label-title">{{st.name}}</label>
+                <div class="col-sm-12 col-md-12">
+                  <div class="card">
+                    <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags2[st.id]" name="tag{{i}}"
+                               [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
+                               bindLabel="name" bindValue="id"></ng-select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -318,8 +301,6 @@
       <div class="card-footer">
         <button type="button" class="btn btn-primary" (click)="savePresu()">Guardar y seguir</button>
       </div>
-
-
     </div>
   </div>
   <div class="card" [ngClass]="{'disabled' : step < 3}">
@@ -406,231 +387,188 @@
         <div class="row">
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header"><label><strong>POBLACIONALES</strong></label>
+              <div class="card-header"><label><strong>POBLACIONALES DIRECTOS</strong></label>
               </div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label class=".text-center">TOTAL BENEFICIARIOS</label>
+                      <label class="text-center">Total beneficiarios</label>
                       <input type="number" [(ngModel)]="item.beneficiaries.poblacionales.total" name="total"
                              class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>MUJERES</label>
+                      <label>Mujeres</label>
                       <input (keyup)="mujerValue(true)" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.total"
-                             name="mujeresTotal" type="number"
-                             name="input1-group1" class="form-control">
+                             name="mujeresTotal" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
                       <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age1"
-                             name="mujer05" type="number"
-                             name="input1-group1"
-                             class="form-control">
+                             name="mujer05" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
                       <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age2"
-                             name="mujer617" type="number"
-                             name="input1-group1" class="form-control">
+                             name="mujer617" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
                       <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age3"
-                             name="mujer1864" type="number"
-                             name="input1-group1" class="form-control">
+                             name="mujer1864" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
                       <input (keyup)="mujerValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.m.age4"
-                             name="mujer65" type="number"
-                             name="input1-group1"
-                             class="form-control">
+                             name="mujer65" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>HOMBRES</label>
+                      <label>Hombres</label>
                       <input (keyup)="hombreValue(true)" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.total"
-                             name="hombresTotal" type="number"
-                             name="input1-group1" class="form-control">
+                             name="hombresTotal" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
                       <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age1"
-                             name="hombre05" type="number"
-                             name="input1-group1" class="form-control">
+                             name="hombre05" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
                       <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age2"
-                             name="hombre617" type="number"
-                             name="input1-group1" class="form-control">
+                             name="hombre617" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
                       <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age3"
-                             name="hombre1864" type="number"
-                             name="input1-group1" class="form-control">
+                             name="hombre1864" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
                       <input (keyup)="hombreValue()" [(ngModel)]="item.beneficiaries.poblacionales.gender.h.age4"
-                             name="hombre65" type="number"
-                             name="input1-group1" class="form-control">
+                             name="hombre65" type="number" class="form-control">
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6" *ngFor="let pb of project_benef">
                     <div class="form-group">
-                      <label>Victimas del conflicto</label>
-                      <input type="number" name="input1-group1" class="form-control">
+                      <label>{{pb.name}}</label>
+                      <input type="number" [(ngModel)]="item.beneficiaries.poblacionales.benef[pb.id]"
+                             class="form-control">
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <!--<div class="col-md-6">
                     <div class="form-group">
-                      <label>Afectados por desatres</label>
-                      <input type="number" name="input1-group1" class="form-control">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Desmovilizados/Reinsertados</label>
-                      <input type="number" name="input1-group1" class="form-control">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Afro-Colombianos</label>
-                      <input type="number" name="input1-group1" class="form-control">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Indigenas</label>
-                      <input type="number" name="input1-group1" class="form-control">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Comentarios: Descripción de género étnico, situación de desplazamientos, etc
-                        (Opcional)</label>
+                      <label>
+                        Comentarios: Descripción de género étnico, situación de desplazamientos, etc (Opcional)
+                      </label>
                       <textarea type="number" name="input1-group1" class="form-control"></textarea>
                     </div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header"><label><strong>INDIRECTOS</strong></label>
+              <div class="card-header">
+                <label><strong>POBLACIONALES INDIRECTOS</strong></label>
               </div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label class=".text-center">TOTAL BENEFICIARIOS</label>
+                      <label class="text-center">Total beneficiarios</label>
                       <input type="number" name="_total" class="form-control"
                              [(ngModel)]="item.beneficiaries.indirectos.total">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>MUJERES</label>
+                      <label>Mujeres</label>
                       <input (keyup)="_mujerValue(true)" [(ngModel)]="item.beneficiaries.indirectos.gender.m.total"
-                             name="_mujeresTotal" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_mujeresTotal" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
                       <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age1"
-                             name="_mujer05" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_mujer05" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
                       <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age2"
-                             name="_mujer617" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_mujer617" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
                       <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age3"
-                             name="_mujer1864" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_mujer1864" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
                       <input (keyup)="_mujerValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.m.age4"
-                             name="_mujer65" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_mujer65" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>HOMBRES</label>
+                      <label>Hombres</label>
                       <input (keyup)="_hombreValue(true)" [(ngModel)]="item.beneficiaries.indirectos.gender.h.total"
-                             name="_hombresTotal" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_hombresTotal" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>0-5 años</label>
                       <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age1"
-                             name="_hombre05" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_hombre05" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>6-17 años</label>
                       <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age2"
-                             name="_hombre617" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_hombre617" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>18-64 años</label>
                       <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age3"
-                             name="_hombre1864" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_hombre1864" type="number" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>65+ años</label>
                       <input (keyup)="_hombreValue()" [(ngModel)]="item.beneficiaries.indirectos.gender.h.age4"
-                             name="_hombre65" type="number"
-                             name="input1-group1" class="form-control">
+                             name="_hombre65" type="number" class="form-control">
                     </div>
                   </div>
                 </div>
@@ -640,17 +578,15 @@
           <div class="col-md-6">
             <div class="card">
               <div class="card-header">
-                <strong>NO POBLACIONALES</strong>
+                <strong>NO-POBLACIONALES</strong>
               </div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>ORGANIZACIONES BENEFICAS</label>
-
+                      <label>Organizaciones beneficiarias</label>
                       <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                               (click)="show_modal(5)" type="button"><i class="fa fa-plus"></i></button>
-
                       <ng-select [items]="organizations" [multiple]="true"
                                  [(ngModel)]="item.beneficiaries.organizations" name="org" [closeOnSelect]="false"
                                  [searchable]="true"

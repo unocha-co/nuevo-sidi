@@ -1,12 +1,23 @@
 export const navItems = [
   {
-    name: 'Dashboard',
+    name: 'Dashboardneww',
     url: '/dashboard',
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
       text: 'NEW'
     }
+  },
+  {
+     name: 'Map',
+     url:  '/map',
+     icon: 'icon-puzzle', 
+
+  },
+  {
+    title: true,
+    name:'Map'
+
   },
   {
     title: true,

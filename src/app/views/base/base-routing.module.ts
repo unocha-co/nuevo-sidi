@@ -7,10 +7,10 @@ import { OrganizationProjectRelationComponent } from '../admin/organization-proj
 import { OrganizationTypesComponent } from '../admin/organization-types/organization-types.component';
 import { OrganizationsComponent } from '../admin/organizations/organizations.component';
 import { ProjectClassComponent } from '../admin/project-class/project-class.component';
-import { UserProfilesComponent } from '../admin/user-profiles/user-profiles.component';
-
 const routes: Routes = [
-{
+
+
+  {
   path: '',
   data: {
     title: 'Admin'

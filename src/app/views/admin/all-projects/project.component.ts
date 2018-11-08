@@ -25,17 +25,15 @@ export class ProjectComponent implements OnInit {
   contactsgroups: Contact;
   organizationitem: Organizations;
   newcontact: Contacts;
-
   dataorganizationnew: any[];
-
   ejecutora = 'ejecutora';
   implementadora = 'implementadora';
   donante = 'donante';
-
   valaddorganization: number;
 
   isCollapsed: boolean = true;
   organizations: any = [];
+  project_benef: any;
   step: number;
   regions: any;
   contacts: any;
@@ -47,7 +45,7 @@ export class ProjectComponent implements OnInit {
   shorttags4: any;
   tagschildrenscluster: any;
   mainClusterTag: any;
-  tag_active = {id: '', name: '', childrens: [], tab: ''};
+  tag_active = {id: '', name: '', childrens: [], tab: '', type: 1};
   entity = 'project';
   entityneworganization = 'organization';
   entity_api = 'organizations';
@@ -68,6 +66,7 @@ export class ProjectComponent implements OnInit {
     this.newcontact = new Contacts();
     this.form = this.formBuilder.group({
       code: ['', Validators.required],
+      span: ['', Validators.required], //duracion meses
       date_start: ['', Validators.required],
       date_end: ['', Validators.required],
       organization: ['', Validators.required],
@@ -75,7 +74,7 @@ export class ProjectComponent implements OnInit {
       description: ['', Validators.required],
       contact: ['', Validators.required],
       implementers: ['', Validators.required],
-      hrp: ['', Validators.required]
+      // hrp: ['', Validators.required]
     });
     this.route.params.subscribe(params => {
       let id = params['id'];
@@ -96,6 +95,7 @@ export class ProjectComponent implements OnInit {
           let data = item.data;
           this.item.id = data.id;
           this.item.code = data.code;
+          this.item.span = data.span;
           this.item.name = data.name;
           this.item.hrp = data.hrp;
           this.item.contact = data.contact;
@@ -103,6 +103,7 @@ export class ProjectComponent implements OnInit {
           this.item.date_end = data.date_end;
           this.item.organization = data.organization;
           this.item.description = data.description;
+          this.item.documents = data.documents;
           this.item.interagency = data.interagency == 1 ? true : false;
           this.service.getRequest('getAllRegions', null).subscribe(res => {
             this.regions = res;
@@ -123,23 +124,30 @@ export class ProjectComponent implements OnInit {
               switch (t.tab) {
                 case 1:
                   this.item.shorttags1[t.id] = [];
-                  this.tag_active = {id: '', name: '', childrens: [], tab: ''}; //anterior
+                  this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1};
                   this.tag_active.id = t.id;
                   this.tag_active.name = t.name;
+                  this.tag_active.type = t.type;
                   this.recursive_childrens(t);
                   this.shorttags1.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
-                    for (let ts of data.shorttags)
+                    for (let ts of data.shorttags) {
                       if (ta.id == ts.tag_id) {
-                        this.item.shorttags1[t.id].push(ta.id);
+                        if (t.type == 2) {
+                          this.item.shorttags1[t.id].push(ta.id);
+                        } else {
+                          this.item.shorttags1[t.id] = ta.id;
+                        }
                       }
+                    }
                   }
                   break;
                 case 2:
                   this.item.shorttags2[t.id] = [];
-                  this.tag_active = {id: '', name: '', childrens: [], tab: ''}; //anterior
+                  this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1};
                   this.tag_active.id = t.id;
                   this.tag_active.name = t.name;
+                  this.tag_active.type = t.type;
                   this.recursive_childrens(t);
                   this.shorttags2.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
@@ -151,9 +159,10 @@ export class ProjectComponent implements OnInit {
                   break;
                 case 3:
                   this.item.shorttags3[t.id] = [];
-                  this.tag_active = {id: '', name: '', childrens: [], tab: ''}; //anterior
+                  this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1}; //anterior
                   this.tag_active.id = t.id;
                   this.tag_active.name = t.name;
+                  this.tag_active.type = t.type;
                   this.recursive_childrens(t);
                   this.shorttags3.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
@@ -165,9 +174,10 @@ export class ProjectComponent implements OnInit {
                   break;
                 case 4:
                   this.item.shorttags4[t.id] = [];
-                  this.tag_active = {id: '', name: '', childrens: [], tab: ''}; //anterior
+                  this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1}; //anterior
                   this.tag_active.id = t.id;
                   this.tag_active.name = t.name;
+                  this.tag_active.type = t.type;
                   this.recursive_childrens(t);
                   this.shorttags4.push(this.tag_active);
                   for (let ta of this.tag_active.childrens) {
@@ -200,7 +210,7 @@ export class ProjectComponent implements OnInit {
                 }
               } else {
                 this.item.tags[t.id] = [];
-                this.tag_active = {id: '', name: '', childrens: [], tab: ''}; //anterior
+                this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1}; //anterior
                 this.tag_active.id = t.id;
                 this.tag_active.name = t.name;
                 this.recursive_childrens(t);
@@ -235,10 +245,17 @@ export class ProjectComponent implements OnInit {
             for (let d of data.beneficiaries_organizations)
               this.item.beneficiaries.organizations.push(d.organization_id);
           }
+          this.item.beneficiaries.poblacionales.benef = {};
+          this.service.getRequest('project_beneficiaries_groups', null).subscribe(data => {
+            this.project_benef = data;
+          });
           if (data.beneficiaries.length > 0) {
             for (let b of data.beneficiaries) {
               //Poblacionales
-              if (b.group_id == null && b.gender == null && b.age == null && b.type == '1')
+              if (b.group_id != null) {
+                this.item.beneficiaries.poblacionales.benef[b.group_id] = b.number;
+              }
+              else if (b.group_id == null && b.gender == null && b.age == null && b.type == '1')
                 this.item.beneficiaries.poblacionales.total = b.number;
               else if (b.group_id == null && b.gender == 'm' && b.age == null && b.type == '1')
                 this.item.beneficiaries.poblacionales.gender.m.total = b.number;
@@ -260,9 +277,8 @@ export class ProjectComponent implements OnInit {
                 this.item.beneficiaries.poblacionales.gender.h.age3 = b.number;
               else if (b.group_id == null && b.gender == 'h' && b.age == '4' && b.type == '1')
                 this.item.beneficiaries.poblacionales.gender.h.age4 = b.number;
-
               //Indirectos
-              if (b.group_id == null && b.gender == null && b.age == null && b.type == '2')
+              else if (b.group_id == null && b.gender == null && b.age == null && b.type == '2')
                 this.item.beneficiaries.indirectos.total = b.number;
               else if (b.group_id == null && b.gender == 'm' && b.age == null && b.type == '2')
                 this.item.beneficiaries.indirectos.gender.m.total = b.number;
@@ -285,11 +301,9 @@ export class ProjectComponent implements OnInit {
               else if (b.group_id == null && b.gender == 'h' && b.age == '4' && b.type == '2')
                 this.item.beneficiaries.indirectos.gender.h.age4 = b.number;
             }
+            console.log(this.item.beneficiaries.poblacionales.benef);
           }
-          if (data.location.length == 1 && data.location[0].admin_id == 0)
-            this.item.national == '1';
-          else
-            this.item.national = '0';
+          this.item.national = (data.location.length == 1 && data.location[0].admin_id == 0) ? '1' : '0';
           this.blockUI.stop();
         });
       } else {
@@ -328,8 +342,20 @@ export class ProjectComponent implements OnInit {
 
 
   addP() {
-    if (this.item.budget.length < 50)
+    let valdatestart = new Date(this.item.date_start);
+    let valdateend = new Date(this.item.date_end);
+    let difyear = this.diff_years(valdatestart, valdateend);
+    let size = this.item.budget.length;
+    let newsize = size - 1;
+    if (newsize <= difyear) {
       this.item.budget.push({value: ''});
+    }
+  }
+
+  diff_years(dt2, dt1) {
+    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60 * 24);
+    return Math.abs(Math.round(diff / 365.25));
   }
 
   removeP() {
@@ -404,7 +430,6 @@ export class ProjectComponent implements OnInit {
         const control = form.get(field);            // {2}
         control.markAsTouched({onlySelf: true});  // {3}
       });
-
       Swal({
         position: 'top-end',
         type: 'error',
@@ -446,14 +471,9 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  saveClasif() {
+  savePresu() {
     this.blockUI.start('');
-    this.service.saveOrUpdate('project_tags_rel', {
-      project_id: this.item.id,
-      tags: this.item.tags,
-      mainClusterTag: this.mainClusterTag,
-      clusterTags: this.tagschildrenscluster
-    }).subscribe(data => {
+    this.service.saveOrUpdate(this.entity, this.item).subscribe(data => {
       this.saveShortTags();
       this.blockUI.stop();
       if (data.status) {
@@ -477,8 +497,39 @@ export class ProjectComponent implements OnInit {
         });
       }
     });
+  }
 
-
+  saveClasif() {
+    this.blockUI.start('');
+    this.service.saveOrUpdate('project_tags_rel', {
+      project_id: this.item.id,
+      tags: this.item.tags,
+      mainClusterTag: this.mainClusterTag,
+      clusterTags: this.tagschildrenscluster
+    }).subscribe(data => {
+      this.saveShortTags();
+      this.blockUI.stop();
+      if (data.status) {
+        this.step = 4;
+        this.collapsedSelected = 4;
+        this.isCollapsed = true;
+        Swal({
+          position: 'top-end',
+          type: 'success',
+          title: 'Guardado exitoso',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      } else {
+        Swal({
+          position: 'top-end',
+          type: 'error',
+          title: 'Error al guardar',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    });
   }
 
   saveBenef(redirect = false) {
@@ -499,39 +550,6 @@ export class ProjectComponent implements OnInit {
         });
         if (redirect)
           this.router.navigate(['/admin/all-projects']);
-      } else {
-        Swal({
-          position: 'top-end',
-          type: 'error',
-          title: 'Error al guardar',
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }
-    });
-  }
-
-  savePresu() {
-    this.blockUI.start('');
-    this.service.saveOrUpdate('project_short_tags_rel', {
-      project_id: this.item.id,
-      shorttags1: this.item.shorttags1,
-      shorttags2: this.item.shorttags2,
-      shorttags3: this.item.shorttags3,
-      shorttags4: this.item.shorttags4,
-    }).subscribe(data => {
-      this.blockUI.stop();
-      if (data) {
-        this.step = 4;
-        this.collapsedSelected = 4;
-        this.isCollapsed = true;
-        Swal({
-          position: 'top-end',
-          type: 'success',
-          title: 'Guardado exitoso',
-          showConfirmButton: false,
-          timer: 1500
-        });
       } else {
         Swal({
           position: 'top-end',
@@ -599,7 +617,6 @@ export class ProjectComponent implements OnInit {
     document.getElementById('btn-show-modal').click();
   }
 
-
   saveOrUpdate() {
     let finddata: any;
     this.service.saveOrUpdate(this.entity_api, this.organizationitem).subscribe(data => {
@@ -624,10 +641,7 @@ export class ProjectComponent implements OnInit {
           timer: 1500
         });
       }
-
-
     });
-
   }
 
   syncorganizations(tipoorganization) {

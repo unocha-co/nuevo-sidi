@@ -29,6 +29,7 @@ import { AuthService } from '../app/auth/auth.service';
 import { CallBackAuth0 } from './views/callback_auth0/callback.component';
 import { AuthGuardService } from '../app/auth/auth-guard.service';
 
+
 const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
