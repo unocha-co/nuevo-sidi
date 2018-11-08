@@ -29,7 +29,7 @@ export class ContactGroupsComponent implements AfterContentInit {
       }, title: 'Acciones'
     }
   ]; // Columnas del datatable
-  entity = 'Grupos de contactos';  // Nombre de la entidad
+  entity = 'Grupo de contactos';  // Nombre de la entidad
   entity_api = 'contact'; // uta del api
   modal;
 

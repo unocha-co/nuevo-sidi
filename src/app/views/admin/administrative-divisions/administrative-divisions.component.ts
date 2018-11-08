@@ -28,7 +28,7 @@ export class AdministrativeDivisionsComponent implements AfterContentInit {
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
         }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Divisiones administrativa'; // Nombre de la entidad
+  entity = 'División administrativa'; // Nombre de la entidad
   entity_api = 'administrative'; // Ruta del api
   modal;
 

@@ -30,7 +30,7 @@ export class OrganizationsComponent implements AfterContentInit {
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Organizaciones'; // Nombre de la entidad
+  entity = 'Organización'; // Nombre de la entidad
   entity_api = 'organizations'; // Ruta del api
   modal;
   constructor(private http: Http, private chRef: ChangeDetectorRef, private service: Service) {
