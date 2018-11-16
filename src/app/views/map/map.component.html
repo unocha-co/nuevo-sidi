@@ -1,0 +1,185 @@
+   <div class="row col-md-6" >
+
+
+     <select name="city" [(ngModel)]="cityselected" class="form-control" (change)="changeCenter(cityselected)" >
+         
+
+         <option *ngFor="let city of cities" [value]="city.id" >
+
+               {{city.name}}
+               {{city.id}}
+           </option>
+
+        
+        
+      </select>
+
+      <!--<select name="city" [(ngModel)]="cityselected" class="form-control" (change)="changeCenter(cityselected)" >
+         <optgroup *ngFor="let region of regions" [label]="region.name">
+
+          
+
+           <option *ngFor="let city of region.childrens" [value]="city.id" >
+
+               {{city.name}}
+               {{city.id}}
+           </option>
+
+         </optgroup>
+        
+      </select>-->
+
+   
+
+
+
+
+    </div>
+    
+
+  <div   style="height: 600px;margin-top: 20px" leaflet [(leafletOptions)]="options"  [(leafletCenter)]="options.center" [(leafletZoom)]="options.zoom" [(leafletLayers)]="options.layers"
+  >
+  </div>
+
+ 
+  <!--
+  <div   style="height: 600px;margin-top: 20px" leaflet [(leafletOptions)]="options"  [(leafletCenter)]="center" [(leafletZoom)]="zoom" [leafletLayers]="layer"   
+  [leafletMarkerCluster]="markerClusterData" [leafletMarkerClusterOptions]="markerClusterOptions">
+  </div>-->
+
+ 
+
+    <div class="card" style="margin-top:20px">
+
+      <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+
+          <a class="btn btn-link" (click)="changeStatusCollapse(1)">
+            RESUMEN
+          </a>
+                  
+        </h5>
+      </div>
+      <div id="collapseOne" class="collapse" [ngClass]="{'show' :collapsedSelected == 1 && isCollapsed}" aria-labelledby="headingOne" >
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">resumen 1</div>
+                <div class="card-body">
+                  <div class="row p15">
+                     <div class="col-md-12">
+
+                       <label><b>División Administrativa:</b></label>                     
+
+                        <p>{{actualubicacion.name}}</p>
+
+                      
+                     
+                    </div>
+                    <div class="col-md-12">
+
+                      <label><b>Projectos Totales</b></label>
+                      <p>{{projects.length}}</p>
+                      
+                    </div>
+                    <div class="col-md-12">
+                      
+                    </div>
+                    
+                    
+                  </div>
+
+                   <div class="row p15" >
+
+                <!--<cdk-virtual-scroll-viewport>
+                  
+                      <div *cdkVirtualFor="let pro of projects">
+
+                          <div class="card" *ngIf="pro.project">
+                           
+                           <div class="card-header" >{{pro.project.name}}
+                           </div>
+                           <div class="card-body">
+
+                             <p><b>Descripción: </b>{{pro.project.description}}</p>
+                             <p><b>Fecha creación: </b><span *ngIf="pro.project.created_at">{{pro.project.created_at}}</span></p>
+                           </div>
+                         </div>
+                       </div>
+                     
+                    </cdk-virtual-scroll-viewport>-->
+                   
+                   <div class="col-md-12">
+                       
+                        <div  *ngFor="let pro of projects" >
+
+                         <div class="card" *ngIf="pro.project">
+                           
+                           <div class="card-header" >{{pro.project.name}}
+                           </div>
+                           <div class="card-body">
+
+                             <p><b>Descripción: </b>{{pro.project.description}}</p>
+                             <p><b>Fecha creación: </b><span *ngIf="pro.project.created_at">{{pro.project.created_at}}</span></p>
+                           </div>
+                         </div>
+                      
+                       </div>
+                     </div>
+
+                    </div>
+                   
+                  
+                    <div class="col-md-12">
+                      
+                    </div>
+                    
+                    
+                  </div>
+
+                </div>
+              </div>
+              
+           
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">resumen 2</div>
+                <div class="card-body">
+                  <div class="row p15">
+                    <div class="col-md-12">
+
+                       <label><b>División Administrativa:</b></label>                     
+
+                        <p>{{actualubicacion.name}}</p>
+
+                      
+                     
+                    </div>
+                    <div class="col-md-12">
+
+                      <label><b>Projectos Totales</b></label>
+                      <p>{{projects.length}}</p>
+                      
+                    </div>
+                    <div class="col-md-12">
+                      
+                    </div>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+           
+          </div>
+       
+        </div>
+          <div class="card-footer">
+             footer
+        </div>
+      </div>
+      
+      </div>

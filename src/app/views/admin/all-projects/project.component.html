@@ -263,9 +263,7 @@
                   </div>
                   <div *ngIf="b.id == 99">
                     <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="vp"
-                           placeholder="USD$" pattern="\d+" #vp="ngModel" required>
-                    <error-message *ngIf="vp.invalid && vp.touched"
-                                   [message]="vp.errors | validationError"></error-message>
+                           placeholder="USD$" pattern="\d+">
                   </div>
                   <input *ngIf="b.id != 0 && b.id != 99" type="number" class="form-control"
                          [(ngModel)]="item.budget[i].value" name="pres{{i}}" placeholder="USD$" pattern="\d+">
@@ -289,8 +287,8 @@
                 <div class="col-sm-12 col-md-12">
                   <div class="card">
                     <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags2[st.id]" name="tag{{i}}"
-                               [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
-                               bindLabel="name" bindValue="id"></ng-select>
+                               [multiple]="(st.type == 2)" [closeOnSelect]="(st.type != 2)" [searchable]="true"
+                               placeholder="Seleccione" bindLabel="name" bindValue="id"></ng-select>
                   </div>
                 </div>
               </div>
@@ -360,8 +358,8 @@
               <div class="col-sm-12 col-md-12">
                 <div class="card">
                   <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags3[st.id]" name="tag{{i}}"
-                             [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
-                             bindLabel="name" bindValue="id"></ng-select>
+                             [multiple]="(st.type == 2)" [closeOnSelect]="(st.type != 2)" [searchable]="true"
+                             placeholder="Seleccione" bindLabel="name" bindValue="id"></ng-select>
                 </div>
               </div>
             </div>
@@ -607,13 +605,12 @@
               <div class="col-sm-12 col-md-12">
                 <div class="card">
                   <ng-select [items]="st.childrens" [(ngModel)]="item.shorttags4[st.id]" name="tag{{i}}"
-                             [multiple]="true" [closeOnSelect]="false" [searchable]="true" placeholder="Seleccione"
-                             bindLabel="name" bindValue="id"></ng-select>
+                             [multiple]="(st.type == 2)" [closeOnSelect]="(st.type != 2)" [searchable]="true"
+                             placeholder="Seleccione" bindLabel="name" bindValue="id"></ng-select>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
       <div class="card-footer">

@@ -7,6 +7,7 @@ import { LoginComponent } from './views/login/login.component';
 import {CallBackAuth0} from './views/callback_auth0/callback.component'
 import {AuthGuardService} from './auth/auth-guard.service';
 
+import { MapComponent } from './views/map/map.component';
 
 export const routes: Routes = [
    {
@@ -33,14 +34,21 @@ export const routes: Routes = [
     path: '',
     component: DefaultLayoutComponent,
     data: {
-      title: 'Inicio'
+      title: 'Home'
     },
     children: [
       {
         path: 'admin',
         loadChildren: './views/admin/admin.module#AdminModule',
         canActivate: [ AuthGuardService ]
-      }
+      },
+
+     {
+     path: 'map',
+      loadChildren: './views/map/map.module#MapModule',
+     canActivate: [ AuthGuardService ] 
+    
+    },
     ]
   }
 ];

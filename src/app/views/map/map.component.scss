@@ -1,0 +1,23 @@
+page-map {
+   [noScroll] {
+     overflow: hidden;
+   }
+
+   #map {
+     height: 100%;
+     width: 100%;
+   }
+ }
+
+
+.angular-leaflet-map[_ngcontent-c3] {
+    width: 100%;
+    height: 500px;
+    
+}
+
+
+.noahora{
+    display: none;
+    visibility: hidden;
+}

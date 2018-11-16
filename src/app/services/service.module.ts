@@ -44,7 +44,7 @@ export class Service {
     });
   }
 
-  getRequest(entity, id) {
+  getRequest(entity, id?: any) {
     let url = globals.api + '/' + entity;
     if(id != null){
       url = globals.api + '/' + entity+ '/' + id;

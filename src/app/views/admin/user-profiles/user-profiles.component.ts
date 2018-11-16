@@ -26,7 +26,7 @@ export class UserProfilesComponent implements AfterContentInit {
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Perfil de usuario';
+  entity = 'Perfiles de usuario';
   entity_api = 'userprofiles'; // Ruta del api
   modal;
 

@@ -13,14 +13,14 @@ const routes: Routes = [
   {
   path: '',
   data: {
-    title: 'Administrar'
+    title: 'Admin'
   },
   children: [
   {
     path: 'administrative-divisions',
     component: AdministrativeDivisionsComponent,
     data: {
-      title: 'Divisiones Administrativas'
+      title: 'Administrative Divisions'
     }
   },
   {

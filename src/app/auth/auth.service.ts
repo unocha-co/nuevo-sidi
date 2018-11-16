@@ -38,7 +38,7 @@ export class AuthService {
               name: profile.name,
               email: profile.email,
               user_id: profile.sub
-            }
+            };
             this.service.saveOrUpdate('user', data).subscribe(data => {
               if(data.status == true){
                 localStorage.setItem('name', data.data.name);

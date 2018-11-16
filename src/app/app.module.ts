@@ -15,7 +15,7 @@ import { BlockUIModule } from 'ng-block-ui';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
-
+ 
 import { AppComponent } from './app.component';
 
 // Import containers
@@ -28,6 +28,8 @@ import { RegisterComponent } from './views/register/register.component';
 import { AuthService } from '../app/auth/auth.service';
 import { CallBackAuth0 } from './views/callback_auth0/callback.component';
 import { AuthGuardService } from '../app/auth/auth-guard.service';
+
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 
 const APP_CONTAINERS = [
@@ -59,6 +61,7 @@ import { OnlyNumber } from './directives/onlyNumbers.directive';
     AppRoutingModule,
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
+    LeafletModule.forRoot(),
     AppFooterModule,
     AppHeaderModule,
     AppSidebarModule,

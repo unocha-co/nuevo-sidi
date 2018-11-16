@@ -37,7 +37,6 @@ export class ProjectComponent implements OnInit {
   step: number;
   regions: any;
   contacts: any;
-  hrps: any;
   tags: any;
   shorttags1: any;
   shorttags2: any;
@@ -73,8 +72,7 @@ export class ProjectComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required],
       contact: ['', Validators.required],
-      implementers: ['', Validators.required],
-      // hrp: ['', Validators.required]
+      implementers: ['', Validators.required]
     });
     this.route.params.subscribe(params => {
       let id = params['id'];
@@ -153,7 +151,11 @@ export class ProjectComponent implements OnInit {
                   for (let ta of this.tag_active.childrens) {
                     for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
-                        this.item.shorttags2[t.id].push(ta.id);
+                        if (t.type == 2) {
+                          this.item.shorttags2[t.id].push(ta.id);
+                        } else {
+                          this.item.shorttags2[t.id] = ta.id;
+                        }
                       }
                   }
                   break;
@@ -168,7 +170,11 @@ export class ProjectComponent implements OnInit {
                   for (let ta of this.tag_active.childrens) {
                     for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
-                        this.item.shorttags3[t.id].push(ta.id);
+                        if (t.type == 2) {
+                          this.item.shorttags3[t.id].push(ta.id);
+                        } else {
+                          this.item.shorttags3[t.id] = ta.id;
+                        }
                       }
                   }
                   break;
@@ -183,7 +189,11 @@ export class ProjectComponent implements OnInit {
                   for (let ta of this.tag_active.childrens) {
                     for (let ts of data.shorttags)
                       if (ta.id == ts.tag_id) {
-                        this.item.shorttags4[t.id].push(ta.id);
+                        if (t.type == 2) {
+                          this.item.shorttags4[t.id].push(ta.id);
+                        } else {
+                          this.item.shorttags4[t.id] = ta.id;
+                        }
                       }
                   }
                   break;
@@ -196,7 +206,6 @@ export class ProjectComponent implements OnInit {
               if (t.id == 2) {
                 this.tagschildrenscluster = t.childrens;
                 for (let child of this.tagschildrenscluster) {
-                  let tagsfinalchild = [];
                   if (child.projectprojecttags.length > 0) {
                     child.selected = true;
                     if (child.projectprojecttags[0].main == 1) {
@@ -313,6 +322,66 @@ export class ProjectComponent implements OnInit {
         this.service.getRequest('getAllRegions', null).subscribe(data => {
           this.regions = data;
         });
+        this.service.getRequest('project_tags').subscribe(ptags => {
+          ptags.forEach((t, i) => {
+            if (t.id == 2) {
+              this.tagschildrenscluster = t.childrens;
+              for (let child of this.tagschildrenscluster) {
+                child.selected = false;
+                child.budget = 0;
+              }
+            } else {
+              this.item.tags[t.id] = [];
+              this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1}; //anterior
+              this.tag_active.id = t.id;
+              this.tag_active.name = t.name;
+              this.recursive_childrens(t);
+              this.tags.push(this.tag_active);
+            }
+          });
+        });
+        this.service.getRequest('project_short_tags').subscribe(pshorttags => {
+          pshorttags.forEach((t, i) => {
+            switch (t.tab) {
+              case 1:
+                this.item.shorttags1[t.id] = [];
+                this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1};
+                this.tag_active.id = t.id;
+                this.tag_active.name = t.name;
+                this.tag_active.type = t.type;
+                this.recursive_childrens(t);
+                this.shorttags1.push(this.tag_active);
+                break;
+              case 2:
+                this.item.shorttags2[t.id] = [];
+                this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1};
+                this.tag_active.id = t.id;
+                this.tag_active.name = t.name;
+                this.tag_active.type = t.type;
+                this.recursive_childrens(t);
+                this.shorttags2.push(this.tag_active);
+                break;
+              case 3:
+                this.item.shorttags3[t.id] = [];
+                this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1}; //anterior
+                this.tag_active.id = t.id;
+                this.tag_active.name = t.name;
+                this.tag_active.type = t.type;
+                this.recursive_childrens(t);
+                this.shorttags3.push(this.tag_active);
+                break;
+              case 4:
+                this.item.shorttags4[t.id] = [];
+                this.tag_active = {id: '', name: '', childrens: [], tab: '', type: 1}; //anterior
+                this.tag_active.id = t.id;
+                this.tag_active.name = t.name;
+                this.tag_active.type = t.type;
+                this.recursive_childrens(t);
+                this.shorttags4.push(this.tag_active);
+                break;
+            }
+          });
+        });
       }
     });
     this.collapsedSelected = 1;
@@ -328,7 +397,6 @@ export class ProjectComponent implements OnInit {
     this.shorttags4 = [];
     this.service.getAll('organizations').subscribe(data => this.organizations = data);
     this.service.getRequest('contacts', null).subscribe(data => this.contacts = data);
-    this.service.getRequest('hrp', null).subscribe(data => this.hrps = data);
   }
 
   recursive_childrens($item) {
@@ -344,7 +412,7 @@ export class ProjectComponent implements OnInit {
   addP() {
     let valdatestart = new Date(this.item.date_start);
     let valdateend = new Date(this.item.date_end);
-    let difyear = this.diff_years(valdatestart, valdateend);
+    let difyear = this.diff_years(valdatestart, valdateend) + 1;
     let size = this.item.budget.length;
     let newsize = size - 1;
     if (newsize <= difyear) {

@@ -15,14 +15,14 @@ const routes: Routes = [
 {
   path: '',
   data: {
-    title: 'Administrar'
+    title: 'Admin'
   },
   children: [
   {
     path: 'administrative-divisions',
     component: AdministrativeDivisionsComponent,
     data: {
-      title: 'Divisiones Administrativas'
+      title: 'Administrative Divisions'
     }
   },
   {
@@ -71,7 +71,7 @@ const routes: Routes = [
       path: 'all-projects',
       component: AllProjectsComponent,
       data: {
-        title: 'Proyectos'
+        title: 'All Projects'
       }
     },
     {
