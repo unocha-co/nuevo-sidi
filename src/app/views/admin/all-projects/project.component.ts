@@ -513,13 +513,13 @@ export class ProjectComponent implements OnInit {
       this.item.location = this.getItemsSelected(this.regions, 'childrens');
     this.blockUI.start('');
     this.service.saveOrUpdate(this.entity, this.item).subscribe(data => {
-      this.saveShortTags();
       this.blockUI.stop();
       if (data.status) {
         this.item.id = data.data.id;
         this.step = 2;
         this.collapsedSelected = 2;
         this.isCollapsed = true;
+        this.saveShortTags();
         Swal({
           position: 'top-end',
           type: 'success',

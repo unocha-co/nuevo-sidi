@@ -13,7 +13,7 @@ import {ViewportRuler, ScrollDispatcher,} from '@angular/cdk/scrolling';
 import {FormControl} from '@angular/forms';
 
 //import {latLng, LatLng, tileLayer} from 'leaflet';
-import {icon, latLng, Layer, marker, tileLayer, polygon, circle} from 'leaflet';
+import {icon, latLng, Layer, marker, Marker, tileLayer, polygon, circle} from 'leaflet';
 
 
 //import * as Leaflet from 'leaflet';
@@ -58,6 +58,7 @@ export class MapComponent implements OnInit {
   cities: any = [];
   regions: any = [];
   projects: any = [];
+  totalprojects: number = 0;
 
   actualubicacion = {
     id: 0,
@@ -67,7 +68,17 @@ export class MapComponent implements OnInit {
     parent_id: null
   };
 
+
+   //LAYER_OSM = tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: 'Open Street Map' });
+
+    // defino array markers
+    //markers: Marker[] = [];
+
+
+
   options: any;
+
+  //Ejemplo options
   /*options = {
       layers: [
           Leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' }),
@@ -79,8 +90,10 @@ export class MapComponent implements OnInit {
       center: Leaflet.latLng(4.624335, -74.063644)
   };*/
 
-  /*layers = [
-      circle([ 4.624335, -74.063644 ], { radius: 5000 }),
+  //Ejemplo layers
+ /*layers = [
+ {
+   circle([ 4.624335, -74.063644 ], { radius: 5000 }),
       //polygon([[ 4.624335, -74.063644 ], [4.624335, -74.063644 ], [ 4.624335, -74.063644 ]]),
      marker([ 4.624335, -74.063644 ],{
          icon: icon({
@@ -90,9 +103,12 @@ export class MapComponent implements OnInit {
           shadowUrl: 'assets/images/marker-shadow.png'
        })
      })
+   }
+
   ];*/
 
-
+ 
+//ejemplo layer
   /*layer = marker([ 4.624335, -74.063644], {
      icon: icon({
         iconSize: [ 25, 41 ],
@@ -103,29 +119,15 @@ export class MapComponent implements OnInit {
   });*/
 
 
+  /*
   center = {
     lat: 4.624335,
     lng: -74.063644,
 
   };
-  zoom = 6;
-
-  /*center =  {
-    lat: null,
-    lng: null,
-
-  };*/
+  zoom = 6;*/
 
   //zoom:number;
-
-  /*layer = Leaflet.marker([ 4.624335, -74.063644 ], {
-    icon: Leaflet.icon({
-       iconSize: [ 25, 41 ],
-       iconAnchor: [ 13, 41 ],
-       iconUrl: 'assets/images/marker-icon.png',
-       shadowUrl: 'assets/images/marker-shadow.png'
-    })
- });*/
 
 
   markerClusterData: any[] = [];
@@ -144,25 +146,36 @@ export class MapComponent implements OnInit {
     console.log(this.entity_api);
 
 
+    //TRAIGO LAS DIVISIONES ADMINISTRATIVAS
+
     this.service.getAll('administrativeMap').subscribe(cities => {
 
       this.cities = cities;
       console.log('cities');
       console.log(this.cities);
 
-
-    });
-
-    this.service.getRequest('getAllRegions', null).subscribe(res => {
-      this.regions = res;
-      for (let r of this.regions) {
-        let childrens = r['childrens'];
-
-        this.checkMain2(r, 'childrens');
+      for(let projreg of this.cities){
+        console.log("projreg.projects_count");
+        console.log(projreg.projects_count);
+        this.totalprojects = this.totalprojects + projreg.projects_count;
       }
+      console.log("TOTAL PROYECTOS");
+      console.log(this.totalprojects);
+
+
     });
-    console.log('Regions');
-    console.log(this.regions);
+
+    
+    //TRAE LOS PROJECTOS
+    //Deberia traer todos los proyectos, pero se rompe. 
+    //como ejemplo solo se trae el proyecto 1182 y las divisionesAdministrativas
+    this.service.getAll('projectsMap').subscribe(projects => {
+
+      this.projects = projects;
+      console.log('projects');
+      console.log(this.projects);
+
+    });
 
 
     this.options = {
@@ -181,41 +194,58 @@ export class MapComponent implements OnInit {
           })
 
         })
+        ,
+        //otro marker
+                marker([9.304386, -74.063644], {
+                  icon: icon({
+                    iconSize: [25, 41],
+                    iconAnchor: [13, 41],
+                    iconUrl: 'assets/images/marker-icon.png',
+                    shadowUrl: 'assets/images/marker-shadow.png'
+                  })
+                })
       ],
       zoom: 6,
       center: latLng(4.624335, -74.063644)
     };
-
-    /*this.layers=[
-    circle([ 4.624335, -74.063644 ], { radius: 5000 }),
-         //polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]]),
-         marker([ 4.624335, -74.063644 ],{
-             icon: icon({
-              iconSize: [ 25, 41 ],
-              iconAnchor: [ 13, 41 ],
-              iconUrl: 'assets/images/marker-icon.png',
-              shadowUrl: 'assets/images/marker-shadow.png'
-           })
-         })
-         ];*/
     console.log('OPTIONS');
     console.log(this.options);
 
-    /*	const data: any[] = [];
 
-          data.push(
-                      marker([ 4.624335, -74.063644 ], {
-                         icon: icon({
-                            iconSize: [ 25, 41 ],
-                            iconAnchor: [ 13, 41 ],
-                            iconUrl: 'assets/images/marker-icon.png',
-                            shadowUrl: 'assets/images/marker-shadow.png'
-                         })
-                      }
-                 )
-          );
-      this.markerClusterData = data;*/
+    //AGREGAR MARKERS
 
+     /* this.options = {
+        layers: [ this.LAYER_OSM ],
+        zoom: 6,
+        center: latLng(4.624335, -74.063644)
+      };
+
+    let newMarker = marker(
+      [ 6.184723, -67.485930 ],
+      {
+        icon: icon({
+          iconSize: [ 25, 41 ],
+          iconAnchor: [ 13, 41 ],
+          iconUrl: 'assets/images/marker-icon.png',
+          shadowUrl: 'assets/images/marker-shadow.png'
+        })
+      }
+    );
+
+    let newMarker2 = marker(
+      [ 9.304386, -75.390409 ],
+      {
+        icon: icon({
+          iconSize: [ 25, 41 ],
+          iconAnchor: [ 13, 41 ],
+          iconUrl: 'assets/images/marker-icon.png',
+          shadowUrl: 'assets/images/marker-shadow.png'
+        })
+      }
+    );
+
+    this.markers.push(newMarker);
+    this.markers.push(newMarker2);*/
 
   }
 
@@ -230,10 +260,9 @@ export class MapComponent implements OnInit {
   }
 
   changeStatusCollapse(position) {
-    //if (position == this.step) {
+
     this.isCollapsed = position == this.collapsedSelected && this.isCollapsed ? false : true;
     this.collapsedSelected = position;
-    //}
   }
 
 
@@ -275,17 +304,14 @@ export class MapComponent implements OnInit {
 
         console.log('this.projects');
         console.log(this.projects);
+        this.totalprojects = this.projects.length;
 
 
       });
 
       if (this.actualubicacion.lat != null && this.actualubicacion.lng != null) {
 
-        /*this.center = {
-                      lat: this.actualubicacion.lat,
-                      lng: this.actualubicacion.lng
-             }*/
-
+        
         this.options = {};
 
         let elid = this.actualubicacion.id;
@@ -359,7 +385,8 @@ export class MapComponent implements OnInit {
                 })
               })
             ],
-            zoom: 12,
+            zoom: 10
+            ,
             center: latLng(this.actualubicacion.lat, this.actualubicacion.lng)
           };
         }
@@ -373,54 +400,6 @@ export class MapComponent implements OnInit {
     } else {
       console.log('NO EXISTE');
 
-      /*	for(let region of this.regions){
-
-                  let index3 = this.region.childrens.find(cit => cit.id === valcit);
-
-                  if(index3 != -1){
-                          console.log("SI EXISTE");
-                      this.actualubicacion = index3;
-
-                      console.log(this.actualubicacion);
-
-                       this.service.getById('projects_by_admin',this.actualubicacion.id).subscribe(projects =>{
-                       console.log("projects");
-                       console.log(projects);
-                       this.projects = projects;
-
-                       console.log("this.projects");
-                       console.log(this.projects);
-                   });
-
-                        if(this.actualubicacion.lat != null && this.actualubicacion.lng != null){
-
-                         this.center = {
-                                   lat: this.actualubicacion.lat,
-                                   lng: this.actualubicacion.lng
-                          }
-
-                          let elid = this.actualubicacion.id;
-                          console.log("EL ID");
-                          console.log(elid);
-
-                          if(this.actualubicacion.parent_id == null){
-
-                                if( elid == 1){
-
-                                    this.zoom = 6;
-
-                                }else{
-                                    this.zoom = 8;
-                                }
-
-
-                          }else if(this.actualubicacion.parent_id != null){
-                              this.zoom = 13;
-                          }
-                      }
-
-              }
-          }*/
 
     }
   }

@@ -14,34 +14,13 @@
         
       </select>
 
-      <!--<select name="city" [(ngModel)]="cityselected" class="form-control" (change)="changeCenter(cityselected)" >
-         <optgroup *ngFor="let region of regions" [label]="region.name">
-
-          
-
-           <option *ngFor="let city of region.childrens" [value]="city.id" >
-
-               {{city.name}}
-               {{city.id}}
-           </option>
-
-         </optgroup>
-        
-      </select>-->
-
-   
-
-
-
-
     </div>
     
-
+  <!--servia antes-->
   <div   style="height: 600px;margin-top: 20px" leaflet [(leafletOptions)]="options"  [(leafletCenter)]="options.center" [(leafletZoom)]="options.zoom" [(leafletLayers)]="options.layers"
   >
   </div>
 
- 
   <!--
   <div   style="height: 600px;margin-top: 20px" leaflet [(leafletOptions)]="options"  [(leafletCenter)]="center" [(leafletZoom)]="zoom" [leafletLayers]="layer"   
   [leafletMarkerCluster]="markerClusterData" [leafletMarkerClusterOptions]="markerClusterOptions">
@@ -80,7 +59,7 @@
                     <div class="col-md-12">
 
                       <label><b>Projectos Totales</b></label>
-                      <p>{{projects.length}}</p>
+                      <p>{{totalprojects}}</p>
                       
                     </div>
                     <div class="col-md-12">
