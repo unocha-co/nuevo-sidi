@@ -254,7 +254,9 @@
                   <label>
                     <span *ngIf="b.id == 0">Presupuesto total*</span>
                     <span *ngIf="b.id == 99">Presupuesto por persona</span>
-                    <span *ngIf="b.id != 0 && b.id != 99">Presupuesto año {{b.id}}</span></label>
+                    <span *ngIf="b.id != 0 && b.id != 99">
+                      Presupuesto año <span *ngIf="b.id">{{b.id}}</span> <span *ngIf="!b.id">{{i - 1}}</span>
+                    </span></label>
                   <div *ngIf="b.id == 0">
                     <input type="number" class="form-control" [(ngModel)]="item.budget[i].value" name="presu"
                            placeholder="USD$" pattern="\d+" #presu="ngModel" required>
