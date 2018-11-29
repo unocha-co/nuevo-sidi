@@ -1,23 +1,155 @@
-page-map {
-   [noScroll] {
-     overflow: hidden;
-   }
-
-   #map {
-     height: 100%;
-     width: 100%;
-   }
- }
-
-
-.angular-leaflet-map[_ngcontent-c3] {
-    width: 100%;
-    height: 500px;
-    
+map, :host {
+  height: 100%;
+  display: block;
+  position: relative;
 }
 
+.angular-leaflet-map[_ngcontent-c3] {
+  width: 100%;
+  height: 500px;
 
-.noahora{
-    display: none;
-    visibility: hidden;
+}
+
+ng-component {
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+.marker-cluster {
+  text-align: center;
+  background-color: yellow;
+  padding-top: 10px;
+  border-radius: 250px;
+}
+
+.card-map-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  margin: 0;
+  max-height: 70%;
+  overflow: hidden;
+  -webkit-transition: max-height 0.5s, rotate 0.5s;
+  -moz-transition: max-height 0.5s, rotate 0.5s;
+  -ms-transition: max-height 0.5s, rotate 0.5s;
+  -o-transition: max-height 0.5s, rotate 0.5s;
+  transition: max-height 0.5s, rotate 0.5s;
+  background-color: transparent;
+
+  .btn-open-info i {
+    transform: rotate(180deg);
+    font-weight: bold !important;
+  }
+
+  #headingInfo {
+    background-color: rgba(255, 0, 0, 0.8);
+    cursor: pointer;
+
+    .btn-open-info {
+      color: #FFFFFF;
+      font-weight: bold;
+    }
+  }
+
+  #collapseInfo {
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    .card-body {
+      background-color: rgba(221, 221, 221, 0.8);
+    }
+
+    .project-info-list {
+      text-align: center;
+    }
+  }
+}
+
+.card-map-filtros {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  margin: 0;
+  max-height: 70%;
+  overflow: hidden;
+  -webkit-transition: max-height 0.5s, rotate 0.5s;
+  -moz-transition: max-height 0.5s, rotate 0.5s;
+  -ms-transition: max-height 0.5s, rotate 0.5s;
+  -o-transition: max-height 0.5s, rotate 0.5s;
+  transition: max-height 0.5s, rotate 0.5s;
+  background-color: transparent;
+  transform: rotate(180deg);
+
+  .btn-open-info i {
+    transform: rotate(0deg);
+    font-weight: bold !important;
+  }
+
+  #headingFiltros {
+    background-color: rgba(0, 20, 255, 0.8);
+    cursor: pointer;
+    transform: rotate(180deg);
+
+    .btn-open-info {
+      color: #FFFFFF;
+      font-weight: bold;
+    }
+  }
+
+  #collapseFiltros {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    transform: rotate(180deg);
+
+    .card-body {
+      background-color: rgba(221, 221, 221, 0.8);
+    }
+
+    .project-info-list {
+      text-align: center;
+    }
+
+    .filtro-periodo{
+      h5{
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: #23282c;
+        text-align: left;
+        font-weight: bold;
+      }
+      .radio-per{
+        float: left;
+        margin-right: 10px;
+        input{
+          margin-right: 3px;
+        }
+      }
+    }
+  }
+}
+
+.card-map-info.collapse-hidden {
+  max-height: 60px;
+
+  .btn-open-info i {
+    transform: rotate(0deg);
+  }
+}
+
+.card-map-filtros.collapse-hidden {
+  max-height: 60px;
+
+  .btn-open-info i {
+    transform: rotate(180deg);
+  }
+}
+
+.project-list-map{
+  cursor: pointer;
 }

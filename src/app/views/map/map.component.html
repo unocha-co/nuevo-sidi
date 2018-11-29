@@ -1,164 +1,239 @@
-   <div class="row col-md-6" >
-
-
-     <select name="city" [(ngModel)]="cityselected" class="form-control" (change)="changeCenter(cityselected)" >
-         
-
-         <option *ngFor="let city of cities" [value]="city.id" >
-
-               {{city.name}}
-               {{city.id}}
-           </option>
-
-        
-        
-      </select>
-
-    </div>
-    
-  <!--servia antes-->
-  <div   style="height: 600px;margin-top: 20px" leaflet [(leafletOptions)]="options"  [(leafletCenter)]="options.center" [(leafletZoom)]="options.zoom" [(leafletLayers)]="options.layers"
-  >
+<!--<mat-chip-list>
+  <mat-chip *ngFor="let filtro of filterchips" color="primary">    {{filtro.filtro}}
+    <span *ngIf="filtro.filtro === 'Periodo'">
+             <span *ngFor="let year of filtro.years">
+                 <span>
+                   <i class="material-icons" (click)="removeFilter(filtro,year)">cancel</i>  {{filtro.texto}} {{year}}
+               </span>
+            </span>
+         </span>
+  </mat-chip>
+</mat-chip-list>-->
+<div *ngIf="options" leaflet style="height: 100%;" [(leafletOptions)]="options" id="map"
+     [(leafletCenter)]="options.center" [(leafletZoom)]="options.zoom" [(leafletLayers)]="options.layers"
+     [leafletMarkerCluster]="markerClusterData" [leafletMarkerClusterOptions]="markerClusterOptions"
+     (leafletMarkerClusterReady)="markerClusterReady($event)">
+</div>
+<div class="card card-map-info" [ngClass]="{'collapse-hidden' :collapsedSelected != 1 || !isCollapsed}">
+  <div class="card-header" id="headingInfo" (click)="changeStatusCollapse(1)">
+    <h5 class="mb-0">
+      <a class="btn btn-open-info">
+        Información &nbsp; <i class="icon-arrow-up"></i>
+      </a>
+    </h5>
   </div>
-
-  <!--
-  <div   style="height: 600px;margin-top: 20px" leaflet [(leafletOptions)]="options"  [(leafletCenter)]="center" [(leafletZoom)]="zoom" [leafletLayers]="layer"   
-  [leafletMarkerCluster]="markerClusterData" [leafletMarkerClusterOptions]="markerClusterOptions">
-  </div>-->
-
- 
-
-    <div class="card" style="margin-top:20px">
-
-      <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-
-          <a class="btn btn-link" (click)="changeStatusCollapse(1)">
-            RESUMEN
-          </a>
-                  
-        </h5>
+  <div id="collapseInfo" class="collapse show" aria-labelledby="headingInfo">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <tabset>
+            <tab heading="Resumen">
+              <div class="row p15">
+                <div class="col-lg-3 col-md-6 project-info-list">
+                  <h4><i class="material-icons">people</i></h4>
+                  <h5>{{totalbeneficiarios}}</h5>
+                  <h6>Beneficiarios</h6>
+                </div>
+                <div class="col-lg-3 col-md-6 project-info-list">
+                  <h4><i class="material-icons">library_books</i></h4>
+                  <h5>{{projects.length}}</h5>
+                  <h6>Proyectos</h6>
+                </div>
+                <div class="col-lg-3 col-md-6 project-info-list">
+                  <h4><i class="material-icons">home</i></h4>
+                  <h5>{{ejecutores.length}}</h5>
+                  <h6>Agencias Ejecutoras</h6>
+                </div>
+                <div class="col-lg-3 col-md-6 project-info-list">
+                  <h4><i class="material-icons">home</i></h4>
+                  <h5>{{implementadores.length}}</h5>
+                  <h6>Agencias Implementadoras</h6>
+                </div>
+                <div class="col-md-12" style="border-top: 1px solid;margin-top: 20px;">
+                  <div style="margin-top:10px; text-align: center">
+                    <h5>PRESUPUESTO</h5>
+                    <h3><b>{{presupuestototal | currency}}</b></h3>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <tab heading="Lista de Proyectos">
+              <div class="row p15">
+                <div class="col-md-12">
+                  <div *ngFor="let pro of project_list" class="project-list-map">
+                    <div class="card" (click)="show_modal(pro.id,'boton')">
+                      <div class="card-header">{{pro.name}}
+                      </div>
+                      <div class="card-body">
+                        <p><b>Descripción: </b>{{pro.description}}</p>
+                        <p><b>Presupuesto: </b>{{pro.presu | currency}}</p>
+                        <p><b>Beneficiarios: </b>
+                          <span *ngFor="let beneficiario of pro.beneficiaries">
+                                {{beneficiario.total}}
+                              </span>
+                        </p>
+                        <p><b>Fecha Inicio: </b><span *ngIf="pro.date_start">{{pro.date_start}}</span></p>
+                        <p><b>Fecha Fin: </b><span *ngIf="pro.date_end">{{pro.date_end}}</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-success btn-block" (click)="loadMoreProjectsList()"
+                          *ngIf="act_ids.length > list_end">Ver más
+                  </button>
+                </div>
+              </div>
+            </tab>
+          </tabset>
+        </div>
       </div>
-      <div id="collapseOne" class="collapse" [ngClass]="{'show' :collapsedSelected == 1 && isCollapsed}" aria-labelledby="headingOne" >
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-header">resumen 1</div>
-                <div class="card-body">
-                  <div class="row p15">
-                     <div class="col-md-12">
-
-                       <label><b>División Administrativa:</b></label>                     
-
-                        <p>{{actualubicacion.name}}</p>
-
-                      
-                     
-                    </div>
-                    <div class="col-md-12">
-
-                      <label><b>Projectos Totales</b></label>
-                      <p>{{totalprojects}}</p>
-                      
-                    </div>
-                    <div class="col-md-12">
-                      
-                    </div>
-                    
-                    
-                  </div>
-
-                   <div class="row p15" >
-
-                <!--<cdk-virtual-scroll-viewport>
-                  
-                      <div *cdkVirtualFor="let pro of projects">
-
-                          <div class="card" *ngIf="pro.project">
-                           
-                           <div class="card-header" >{{pro.project.name}}
-                           </div>
-                           <div class="card-body">
-
-                             <p><b>Descripción: </b>{{pro.project.description}}</p>
-                             <p><b>Fecha creación: </b><span *ngIf="pro.project.created_at">{{pro.project.created_at}}</span></p>
-                           </div>
-                         </div>
-                       </div>
-                     
-                    </cdk-virtual-scroll-viewport>-->
-                   
-                   <div class="col-md-12">
-                       
-                        <div  *ngFor="let pro of projects" >
-
-                         <div class="card" *ngIf="pro.project">
-                           
-                           <div class="card-header" >{{pro.project.name}}
-                           </div>
-                           <div class="card-body">
-
-                             <p><b>Descripción: </b>{{pro.project.description}}</p>
-                             <p><b>Fecha creación: </b><span *ngIf="pro.project.created_at">{{pro.project.created_at}}</span></p>
-                           </div>
-                         </div>
-                      
-                       </div>
-                     </div>
-
-                    </div>
-                   
-                  
-                    <div class="col-md-12">
-                      
-                    </div>
-                    
-                    
-                  </div>
-
-                </div>
-              </div>
-              
-           
-
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-header">resumen 2</div>
-                <div class="card-body">
-                  <div class="row p15">
-                    <div class="col-md-12">
-
-                       <label><b>División Administrativa:</b></label>                     
-
-                        <p>{{actualubicacion.name}}</p>
-
-                      
-                     
-                    </div>
-                    <div class="col-md-12">
-
-                      <label><b>Projectos Totales</b></label>
-                      <p>{{projects.length}}</p>
-                      
-                    </div>
-                    <div class="col-md-12">
-                      
-                    </div>
-                    
-                    
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-           
+    </div>
+  </div>
+</div>
+<div class="card card-map-filtros" [ngClass]="{'collapse-hidden' :collapsedSelected != 2 || !isCollapsed}">
+  <div class="card-header" id="headingFiltros" (click)="changeStatusCollapse(2)">
+    <h5 class="mb-0">
+      <a class="btn btn-open-info">
+        Filtros &nbsp; <i class="icon-arrow-up"></i>
+      </a>
+    </h5>
+  </div>
+  <div id="collapseFiltros" class="collapse show" aria-labelledby="headingFiltros">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-12 filtro-periodo">
+          <h5>Periodo</h5>
+          <div *ngFor="let opcvigencia of opcionesvigencia" class="radio-per">
+            <input type="radio" id="r{{opcvigencia.value}}" name="r" [value]="opcvigencia" [(ngModel)]="lavigencia">
+            <label for="r{{opcvigencia.value}}">{{opcvigencia.texto}}</label>
           </div>
-       
+          <select placeholder="PERIODO" name="periodo" [(ngModel)]="periodoseleccionado" class="form-control"
+                  (change)="filtroPeriodo(periodoseleccionado,lavigencia)">
+            <option *ngFor="let periodo of periodos" [value]="periodo">
+              {{periodo}}
+            </option>
+            <option [value]="0">
+              Todos los periodos
+            </option>
+          </select>
         </div>
-          <div class="card-footer">
-             footer
+        <div class="col-md-4 class-tags" *ngFor="let rel of relacionesOrgProyectos; let i=index"
+             style="display: inline-block;">
+          <label class="font-weight-bold" title="{{rel.name}}"
+                 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">{{rel.name}}</label>
+          <ng-select [(ngModel)]="filters.org[rel.id]" name="tag{{i}}" [multiple]="true" [searchable]="true"
+                     placeholder="Seleccione" (change)="enviarInfo()">
+            <ng-option *ngFor="let o of filtros.org_list[rel.id]" [value]="o.organization_id">
+              ({{o.p_org_count}}) - {{o.org.name}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-md-4 class-tags" *ngFor="let projtag of projecttags; let i=index"
+             style="display: inline-block;">
+          <label class="font-weight-bold" title="{{projtag.name}}"
+                 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">{{projtag.name}}</label>
+          <ng-select [(ngModel)]="filters.tags[projtag.id]" name="tag{{i}}" [multiple]="true" [searchable]="true"
+                     placeholder="Seleccione" (change)="enviarInfo()">
+            <ng-option *ngFor="let f of filtros.tags_list[projtag.id]" [value]="f.id">
+              ({{f.projectprojecttags_count}}) - {{f.name}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-md-4 class-tags" *ngFor="let projshorttag of projectshorttags; let i=index"
+             style="display: inline-block;">
+          <label class="font-weight-bold" title="{{projshorttag.name}}"
+                 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">{{projshorttag.name}}</label>
+          <ng-select [(ngModel)]="filters.shorttags[projshorttag.id]" name="tag{{i}}" [multiple]="true"
+                     [searchable]="true" placeholder="Seleccione" (change)="enviarInfo()">
+            <ng-option *ngFor="let f of filtros.stags_list[projshorttag.id]" [value]="f.id">
+              ({{f.projectprojecttags_count}}) - {{f.name}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-md-4 class-tags" style="display: inline-block;">
+          <label class="font-weight-bold" title="Departamento"
+                 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">Departamento</label>
+          <ng-select [(ngModel)]="departamentosseleccionados" name="tag{{i}}" [multiple]="true" [searchable]="true"
+                     placeholder="Seleccione" (change)="filtroDepartamentos(departamentosseleccionados)">
+            <ng-option *ngFor="let d of departamentos" [value]="d">
+              ({{d.projects_count}}) - {{d.name}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-md-4 class-tags" style="display: inline-block;">
+          <label class="font-weight-bold" title="Municipio"
+                 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">Municipio</label>
+          <ng-select [(ngModel)]="cityselected" name="tag{{i}}" [multiple]="true" [searchable]="true"
+                     placeholder="Seleccione" (change)="filtroCiudades(cityselected)">
+            <ng-option *ngFor="let c of cities" [value]="c">
+              ({{c.projects_count}}) - {{c.name}}
+            </ng-option>
+          </ng-select>
         </div>
       </div>
-      
+    </div>
+  </div>
+</div>
+<!--MODAL INFO-->
+<button type="button" style="visibility: hidden; position: absolute; top:0;" id="btn-show-modal"
+        (click)="modal.show()"></button>
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Información del proyecto</h4>
+        <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <div class="modal-body">
+        <div>
+          <label><strong>Nombre: </strong></label>
+          <p>{{proyectoseleccionado.name}}</p>
+        </div>
+        <div>
+          <label><strong>Descripción: </strong></label>
+          <p>{{proyectoseleccionado.description}}</p>
+        </div>
+        <div>
+          <label><strong>Presupuesto: </strong></label>
+          <div *ngFor="let presupuesto of proyectoseleccionado.budget">
+            <p *ngIf="presupuesto == proyectoseleccionado.budget[0]">
+              Total: {{presupuesto.budget | currency}}
+            </p>
+            <p *ngIf="presupuesto == proyectoseleccionado.budget[1]">
+              Presu primer año: {{presupuesto.budget | currency}}
+            </p>
+            <p *ngIf="presupuesto == proyectoseleccionado.budget[1]">
+              Presu segundo año: {{presupuesto.budget | currency}}
+            </p>
+          </div>
+        </div>
+        <div>
+          <label><strong>Beneficiarios: </strong></label><span>{{proyectoseleccionado.total_benef}}</span>
+        </div>
+        <div>
+          <label><strong>Ejecutor: </strong></label><span>{{proyectoseleccionado.ejecutor.org.name}}</span>
+        </div>
+        <div>
+          <label><strong>Implementadores: </strong></label>
+          <span *ngFor="let p of proyectoseleccionado.implementers; let last = last;">
+             {{p.org.name}} <span *ngIf="!last">,</span>
+           </span>
+        </div>
+        <div>
+          <label><strong>Donantes: </strong></label>
+          <span *ngFor="let p of proyectoseleccionado.donors; let last = last;">
+             {{p.org.name}} <span *ngIf="!last">,</span>
+           </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modal" (click)="modal.hide()">Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="saveOrUpdate()">Guardar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>

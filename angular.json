@@ -96,6 +96,7 @@
               "src/favicon.ico",
               {
                 "input": "./node_modules/leaflet/dist/images",
+              
               }
             ]
           }

@@ -235,6 +235,31 @@
 	pointer-events: none;
 	}
 
+.leaflet-marker-icon div{
+	text-align: center;
+    background-color: #0f52ec;
+    padding-top: 10px;
+    border-radius: 250px;
+    height: 35px;
+    width: 35px; 
+        opacity: 0.8;
+    font-weight: bold;
+    color: white;
+        margin-left: -14px;
+    margin-top: -14px;
+    
+
+   
+    
+}
+
+
+
+.leaflet-marker-icon .leaflet-div-icon .leaflet-zoom-animated .leaflet-interactive{
+height:0px;
+width: 0px
+}
+
 .leaflet-marker-icon.leaflet-interactive,
 .leaflet-image-layer.leaflet-interactive,
 .leaflet-pane > svg path.leaflet-interactive {
@@ -549,11 +574,11 @@
 
 
 /* div icon */
-
+/*
 .leaflet-div-icon {
 	background: #fff;
 	border: 1px solid #666;
-	}
+	}*/
 
 
 /* Tooltip */

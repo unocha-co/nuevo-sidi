@@ -30,7 +30,9 @@ import { CallBackAuth0 } from './views/callback_auth0/callback.component';
 import { AuthGuardService } from '../app/auth/auth-guard.service';
 
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+ import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 const APP_CONTAINERS = [
   DefaultLayoutComponent
@@ -54,7 +56,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OnlyNumber } from './directives/onlyNumbers.directive';
-
+ 
 @NgModule({
   imports: [
     BrowserModule,
@@ -62,6 +64,7 @@ import { OnlyNumber } from './directives/onlyNumbers.directive';
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
     LeafletModule.forRoot(),
+    LeafletMarkerClusterModule.forRoot(),
     AppFooterModule,
     AppHeaderModule,
     AppSidebarModule,
@@ -78,7 +81,8 @@ import { OnlyNumber } from './directives/onlyNumbers.directive';
     MatCheckboxModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    BlockUIModule.forRoot()
+    BlockUIModule.forRoot(),
+    Ng4LoadingSpinnerModule.forRoot()
   ],
   declarations: [
     AppComponent,

@@ -21,6 +21,11 @@ export class Service {
     return this.http.get(url, { headers: this.getHeaders() }).pipe(map((response: any) => response.json()));
   }
 
+  getByIdMap(entity, info,filter) {
+    const url = globals.api + '/' + entity + '/' + info + '/' + filter;
+    return this.http.get(url, { headers: this.getHeaders() }).pipe(map((response: any) => response.json()));
+  }
+
   saveOrUpdate(entity, data) {
     const url = globals.api + '/' + entity;
     if (data.id == null) {
