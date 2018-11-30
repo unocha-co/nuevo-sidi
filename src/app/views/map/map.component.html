@@ -156,7 +156,7 @@
                  style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">Departamento</label>
           <ng-select [(ngModel)]="departamentosseleccionados" name="tag{{i}}" [multiple]="true" [searchable]="true"
                      placeholder="Seleccione" (change)="filtroDepartamentos(departamentosseleccionados)">
-            <ng-option *ngFor="let d of departamentos" [value]="d">
+            <ng-option *ngFor="let d of departamentos; let i=index" [value]="d">
               ({{d.projects_count}}) - {{d.name}}
             </ng-option>
           </ng-select>
@@ -166,7 +166,7 @@
                  style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;">Municipio</label>
           <ng-select [(ngModel)]="cityselected" name="tag{{i}}" [multiple]="true" [searchable]="true"
                      placeholder="Seleccione" (change)="filtroCiudades(cityselected)">
-            <ng-option *ngFor="let c of cities" [value]="c">
+            <ng-option *ngFor="let c of cities; let i=index" [value]="c">
               ({{c.projects_count}}) - {{c.name}}
             </ng-option>
           </ng-select>
