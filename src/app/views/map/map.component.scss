@@ -68,6 +68,10 @@ ng-component {
   }
 }
 
+#topList{
+overflow-y: scroll;
+}
+
 .card-map-filtros {
   position: absolute;
   top: 0;

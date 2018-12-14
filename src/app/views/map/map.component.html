@@ -41,12 +41,12 @@
                 </div>
                 <div class="col-lg-3 col-md-6 project-info-list">
                   <h4><i class="material-icons">home</i></h4>
-                  <h5>{{ejecutores.length}}</h5>
+                  <h5>{{ejecutorestotal}}</h5>
                   <h6>Agencias Ejecutoras</h6>
                 </div>
                 <div class="col-lg-3 col-md-6 project-info-list">
                   <h4><i class="material-icons">home</i></h4>
-                  <h5>{{implementadores.length}}</h5>
+                  <h5>{{implementadorestotal}}</h5>
                   <h6>Agencias Implementadoras</h6>
                 </div>
                 <div class="col-md-12" style="border-top: 1px solid;margin-top: 20px;">
@@ -58,6 +58,11 @@
               </div>
             </tab>
             <tab heading="Lista de Proyectos">
+              <div class="col-md-3">
+                  <button *ngIf="act_ids.length" type="button" class="btn btn-info btn-sm" (click)="excelProjects()">
+                          <i class="material-icons">save_alt</i>Descargar proyectos
+                  </button>
+                </div>
               <div class="row p15">
                 <div class="col-md-12">
                   <div *ngFor="let pro of project_list" class="project-list-map">
@@ -83,6 +88,202 @@
                           *ngIf="act_ids.length > list_end">Ver más
                   </button>
                 </div>
+              </div>
+            </tab>
+            <!--tab graficas-->
+            <tab heading="Gráficas">
+              <div class="row p15">
+
+                <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>TOP 5 ORGANIZACIONES EJECUTORAS CON MAYOR PRESUPUESTO</h3> 
+                   <canvas baseChart
+                      [(datasets)]="barChartDataTopEjecutores"
+                      
+                      [chartType]="barChartDataTopEjecutoresType"
+                      [options]="barChartDataTopEjecutoresOptions">
+                        
+                      </canvas>
+
+                      <div  class="row" *ngFor="let orgejecutora of top5organizacionesejecutoras; let i=index" style="text-align: justify;" data-spy="scroll">
+                        <div class="col-md-2">
+                          {{i+1}}
+                        </div>
+                        <div class="col-md-7">
+                           {{orgejecutora.org.name}}
+                        </div>
+                        <div class="col-md-3">
+                          <b>{{(orgejecutora.orgprojpresupuesto/presupuestototal) | percent:'1.2-2'}}</b>
+                          {{orgejecutora.orgprojpresupuesto | currency}}
+                        </div>
+                      </div>
+                      
+                      <button *ngIf="mostrarTop5Ejecutoras == true" type="button" (click)="mostrarTodasOrgEjecutoras('todas')">Mostrar Todos</button>
+                      <button *ngIf="mostrarTop5Ejecutoras == false" type="button" (click)="mostrarTodasOrgEjecutoras('top5')">Mostrar Top 5</button>
+                </div>
+
+                
+                <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <h3>TOP 5 ORGANIZACIONES IMPLEMENTADORAS CON MAYOR PRESUPUESTO</h3> 
+                   <canvas baseChart
+                      [(datasets)]="barChartDataTopImplementadores"
+                      [(labels)]="barChartDataTopImplementadoresLabels"
+                      [chartType]="barChartDataTopImplementadoresType"
+                      [legend]="barChartDataTopImplementadoresLegend"
+                      [options]="barChartDataTopImplementadoresOptions">
+                        
+                      </canvas> 
+
+                      <div  class="row" *ngFor="let implementadora of top5organizacionesimplementadoras; let i=index" style="text-align: justify;" data-spy="scroll">
+                        <div class="col-md-2">
+                          {{i+1}}
+                        </div>
+                        <div class="col-md-7">
+                           {{implementadora.org.name}}
+                        </div>
+                        <div class="col-md-3">
+                         <!-- <b>{{(implementadora.orgprojpresupuesto/presupuestototal) | percent:'1.2-2'}}</b>-->
+                          {{implementadora.orgprojpresupuesto | currency}}
+                        </div>
+                      </div>
+                      
+                      <button *ngIf="mostrarTop5Implementadores == true" type="button" (click)="mostrarTodasOrgImplementadoras('todas')">Mostrar Todos</button>
+                      <button *ngIf="mostrarTop5Implementadores == false" type="button" (click)="mostrarTodasOrgImplementadoras('top5')">Mostrar Top 5</button>
+                </div>
+
+       
+
+
+                <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>TOP 5 ORGANIZACIONES DONANTES CON MAYOR PRESUPUESTO</h3> 
+                   <canvas baseChart
+                      [(datasets)]="barChartDataTopDonantes"
+                      [(labels)]="barChartDataTopDonantesLabels"
+                      [chartType]="barChartDataTopDonantesType"
+                      [legend]="barChartDataTopDonantesLegend"
+                      [options]="barChartDataTopDonantesOptions">
+                        
+                      </canvas> 
+
+                      <div  class="row" *ngFor="let donante of top5organizacionesdonantes; let i=index" style="text-align: justify;" data-spy="scroll">
+                        <div class="col-md-2">
+                          {{i+1}}
+                        </div>
+                        <div class="col-md-7">
+                           {{donante.org.name}}
+                        </div>
+                        <div class="col-md-3">
+                          <!--<b>{{(donante.orgprojpresupuesto/presupuestototal) | percent:'1.2-2'}}</b>-->
+                          {{donante.orgprojpresupuesto | currency}}
+                        </div>
+                      </div>
+                      
+                      <button *ngIf="mostrarTop5Donantes == true" type="button" (click)="mostrarTodasOrgDonantes('todas')">Mostrar Todos</button>
+                      <button *ngIf="mostrarTop5Donantes == false" type="button" (click)="mostrarTodasOrgDonantes('top5')">Mostrar Top 5</button>
+                </div>
+
+                <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>TOP 5 DEPARTAMENTOS CON MAYOR PRESUPUESTO</h3> 
+                   <canvas baseChart
+                      [(datasets)]="barChartDataTopDepartamentos"
+                      [(labels)]="barChartDataTopDepartamentosLabels"
+                      [chartType]="barChartDataTopDepartamentosType"
+                      [legend]="barChartDataTopDepartamentosLegend"
+                      [options]="barChartDataTopDepartamentosOptions">
+                        
+                      </canvas> 
+
+                      <div  class="row" *ngFor="let departamento of top5departamentospresupuestos; let i=index" style="text-align: justify;" data-spy="scroll">
+                        <div class="col-md-2">
+                          {{i+1}}
+                        </div>
+                        <div class="col-md-7">
+                           {{departamento.name}}
+                        </div>
+                        <div class="col-md-3">
+                          <b>{{(departamento.presu/presupuestototal) | percent:'1.2-2'}}</b>
+                          {{departamento.presu | currency}}
+                        </div>
+                      </div>
+                      
+                      <button *ngIf="mostrarTop5Departamentos == true" type="button" (click)="mostrarTodosDepartamentosTop('todas')">Mostrar Todos</button>
+                      <button *ngIf="mostrarTop5Departamentos == false" type="button" (click)="mostrarTodosDepartamentosTop('top5')">Mostrar Top 5</button>
+                </div>
+
+
+
+               
+                <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>LOS 5 PROYECTOS CON MAYOR PRESUPUESTO</h3> 
+                    <canvas baseChart
+                      [(data)]="pieChartDataPresupuestos"
+                      [(labels)]="pieChartPresupuestosLabels"
+                      [chartType]="pieChartPresupuestosType">
+                        
+                      </canvas>
+
+                      <div>
+                        <p *ngFor="let projectinfo of pieChartInfoPresupuestos; let i=index" style="text-align: justify;">
+                          {{i+1}}: <span>{{projectinfo.code}} - Presupuesto: {{projectinfo.presu | currency}} - {{projectinfo.name}}</span>
+                        </p>
+                      </div>
+                </div>
+                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>LOS 5 PROYECTOS CON MAYOR NÚMERO DE BENEFICIARIOS</h3> 
+                    <canvas baseChart 
+                      [(data)]="pieChartDataBeneficiarios"
+                      [(labels)]="pieChartBeneficiariosLabels"
+                      [chartType]="pieChartBeneficiariosType">
+                        
+                      </canvas>
+                      <div>
+                        <p *ngFor="let projectinfo of pieChartInfoBeneficiarios; let i=index" style="text-align: justify;">
+                         {{i+1}}: <span>{{projectinfo.code}} - Beneficiarios: {{projectinfo.beneficiaries[0]['total'] | number}} - {{projectinfo.name}}</span>
+                        </p>
+                      </div>
+                </div>
+
+                 
+
+                <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>DEPARTAMENTOS CON MAYOR NÚMERO DE PROYECTOS</h3> 
+                    <canvas baseChart 
+                      [(data)]="pieChartDataDepartamentos"
+                      [(labels)]="pieChartDepartamentosLabels"
+                      [chartType]="pieChartDepartamentosType">
+                        
+                      </canvas>
+                      <div>
+                        <p *ngFor="let departamento of pieChartInfoDepartamentos; let i=index" style="text-align: justify;">
+                         {{i+1}}: <span>{{departamento.name}} - Proyectos: {{departamento.projects_count | number}}</span>
+                        </p>
+                      </div>
+                </div>
+
+                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
+                  <!--<h4><i class="material-icons"></i></h4>-->
+                  <h3>CIUDADES CON MAYOR NÚMERO DE PROYECTOS</h3> 
+                    <canvas baseChart 
+                      [(data)]="pieChartDataCiudades"
+                      [(labels)]="pieChartCiudadesLabels"
+                      [chartType]="pieChartCiudadesType">
+                        
+                      </canvas>
+                      <div>
+                        <p *ngFor="let ciudad of pieChartInfoCiudades; let i=index" style="text-align: justify;">
+                         {{i+1}}: <span>{{ciudad.name}} - Proyectos: {{ciudad.projects_count | number}}</span>
+                        </p>
+                      </div>
+                </div>
+ 
+              
+              
+                
               </div>
             </tab>
           </tabset>

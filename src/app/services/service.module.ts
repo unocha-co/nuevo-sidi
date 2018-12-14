@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
+
+import { Http, Headers,Response,ResponseContentType  } from '@angular/http';
 import { map } from 'rxjs/operators';
 import * as globals from '../globals';
 
@@ -10,6 +12,25 @@ export class Service {
   routes:any;
 
   constructor(private http:Http) { }
+
+  public getAllMap(entity) {
+
+    const url = globals.api + '/' + entity;
+
+  /*return this.http.get(url, {headers:this.getHeaders()}).map((res: Response) => res)
+      .catch(this.handleError);*/
+
+     /* return this.http.get(url,{headers:this.getHeaders(),responseType: ResponseContentType.Blob})
+      .map(response=>response.blob())
+      .catch(error=>{return Observable.throw(error)})*/
+      return this.http.get(url, {headers:this.getHeaders()}).map((res: any) => res)
+      .catch(this.handleError);
+}
+
+private handleError (error: any) {
+    return Observable.throw(error);
+  }
+
 
   getAll(entity) {
     const url = globals.api + '/' + entity;

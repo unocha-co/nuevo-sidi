@@ -1,7 +1,7 @@
-import {Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy,ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Router, ActivatedRoute} from '@angular/router';
-import {Http} from '@angular/http';
+import {Http,Response} from '@angular/http';
 import {Organizations} from '../../models/organizations';
 import {Service} from '../../services/service.module';
 import Swal from 'sweetalert2';
@@ -9,12 +9,17 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {ViewportRuler, ScrollDispatcher,} from '@angular/cdk/scrolling';
 import {FormControl} from '@angular/forms';
+
+import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 //import {latLng, LatLng, tileLayer} from 'leaflet';
 import {icon, latLng, Layer, marker, Marker, tileLayer, polygon, circle} from 'leaflet';
 import * as L from 'leaflet';
 import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
+  import 'rxjs/Rx' ;
+  import * as globals from '../../globals';
 //import icon1 from 'leaflet/dist/images/marker-shadow.png';
 //import icon2 from 'leaflet/dist/images/marker-icon.png';
 //import * as Leaflet from 'leaflet';
@@ -89,8 +94,14 @@ export class MapComponent implements OnInit {
   });
 //arrays para los selects
   ejecutores: any = [];
+  ejecutorestotal = 0;
+
   donantes: any = [];
+  donantestotal = 0;
+
   implementadores: any = [];
+  implementadorestotal = 0;
+
   undafarray: any = [];
   estados: any = [
     {id: 1, texto: 'Finalizado', cantidad: 0},
@@ -144,12 +155,124 @@ export class MapComponent implements OnInit {
     org: []
   };
 
+
+  //pie presupuestos
+@ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
+  pieChartDataPresupuestos:Array<any>=[0,0,0,0,0];  
+  pieChartPresupuestosLabels:Array<any>=["1","2","3","4","5"];
+  pieChartPresupuestosType= 'pie';
+
+  pieChartInfoPresupuestos=[];
+
+  //pie beneficiarios
+
+  public pieChartDataBeneficiarios:Array<any>=[0,0,0,0,0];  
+  public pieChartBeneficiariosLabels:Array<any>=['1','2','3','4','5'];
+  public pieChartBeneficiariosType = 'pie';
+
+  pieChartInfoBeneficiarios=[];
+
+  //pie Departamentos
+
+  public pieChartDataDepartamentos:Array<any>=[0,0,0,0,0];  
+  public pieChartDepartamentosLabels:Array<any>=['1','2','3','4','5'];
+  public pieChartDepartamentosType = 'pie';
+
+  pieChartInfoDepartamentos = [];
+
+  //pie ciudades
+
+  public pieChartDataCiudades:Array<any>=[0,0,0,0,0];  
+  public pieChartCiudadesLabels:Array<any>=['1','2','3','4','5'];
+  public pieChartCiudadesType = 'pie';
+
+  pieChartInfoCiudades = [];
+
+ 
+ //TOPS
+ //ejecutoras
+ top5organizacionesejecutoras=[]; 
+ toporganizacionesejecutorasTodas = [];
+
+ public barChartDataTopEjecutoresOptions:any = {
+    scaleShowVerticalLines: true,
+    responsive: true
+  };
+
+ public barChartDataTopEjecutores:Array<any>=[
+     {data:[12],label:''},
+     {data:[30],label:''},
+     {data:[40],label:''},
+     {data:[50],label:''},
+     {data:[60],label:''}
+
+ ];  
+  public barChartDataTopEjecutoresLabels:Array<any>=['1','2','3','4','5'];
+  public barChartDataTopEjecutoresType = 'bar';
+  public barChartDataTopEjecutoresLegend:boolean = true;
+  mostrarTop5Ejecutoras = true;
+
+ 
+
+  //implementadoras
+ top5organizacionesimplementadoras=[]; 
+ toporganizacionesimplementadorasTodas = [];
+
+ public barChartDataTopImplementadoresOptions:any = {
+    scaleShowVerticalLines: true,
+    responsive: true
+  };
+
+ public barChartDataTopImplementadores:Array<any>=[{data:[12,20,30,40,50],label:'Top 5 Org Implementadoras'}];  
+  public barChartDataTopImplementadoresLabels:Array<any>=['1','2','3','4','5'];
+  public barChartDataTopImplementadoresType = 'bar';
+  public barChartDataTopImplementadoresLegend:boolean = true;
+  mostrarTop5Implementadores = true;
+
+
+    //Donantes
+ top5organizacionesdonantes=[]; 
+ toporganizacionesdonantesTodas = [];
+
+ public barChartDataTopDonantesOptions:any = {
+    scaleShowVerticalLines: true,
+    responsive: true
+  };
+
+ public barChartDataTopDonantes:Array<any>=[{data:[12,20,30,40,50],label:'Top 5 Org Donantes'}];  
+  public barChartDataTopDonantesLabels:Array<any>=['1','2','3','4','5'];
+  public barChartDataTopDonantesType = 'bar';
+  public barChartDataTopDonantesLegend:boolean = true;
+  mostrarTop5Donantes = true;
+
+
+  //Departamentos
+ top5departamentospresupuestos=[]; 
+ topdepartamentosTodos = [];
+
+ public barChartDataTopDepartamentosOptions:any = {
+    scaleShowVerticalLines: true,
+    responsive: true
+  };
+
+ public barChartDataTopDepartamentos:Array<any>=[{data:[12,20,30,40,50],label:'Top 5 Departamentos'}];  
+  public barChartDataTopDepartamentosLabels:Array<any>=['1','2','3','4','5'];
+  public barChartDataTopDepartamentosType = 'bar';
+  public barChartDataTopDepartamentosLegend:boolean = true;
+  mostrarTop5Departamentos = true;
+ 
+
+
   constructor(private service: Service, private spinnerService: Ng4LoadingSpinnerService) {
   }
 
   markerClusterReady(markerCluster: L.MarkerClusterGroup) {
     markerCluster.on('clusterclick', (a) => {
-      let mark = a.layer.getAllChildMarkers();
+
+ 
+      let mark = a.target.getAllChildMarkers();  
+
       if (mark.length > 0) {
         let ids = mark.map(function (x) {
           return x.options.title;
@@ -163,9 +286,31 @@ export class MapComponent implements OnInit {
     this.act_ids = ids;
     this.service.getAll('administrativeMap?pi=1&id=' + ids + '&start=' + start + '&end=' + end).subscribe(data => {
       this.project_list = data.pa;
+      
     });
   }
 
+  excelProjects(){
+
+        let ids = this.act_ids;
+
+        const url = globals.api + '/administrativeMap?pi=2&id='+ids;
+      
+
+        let a = document.createElement("a");
+
+         a.href = url
+        // a.target = '_blank';
+        document.body.appendChild(a);
+        a.click(); 
+
+        /*this.service.getAllMap('administrativeMap?pi=2&id=' + ids).subscribe(
+      data => this.downloadFile(data)),//console.log(data),
+                       error => console.log('Error downloading the file.'),
+                       () => console.info('OK');*/     
+   
+  }
+ 
   loadMoreProjectsList() {
     this.spinnerService.show();
     this.list_end += 5;
@@ -175,12 +320,47 @@ export class MapComponent implements OnInit {
     });
   }
 
+
+
   groupBy(xs, key) {
     return xs.reduce(function (rv, x) {
       (rv[x[key]] = rv[x[key]] || []).push(x);
       return rv;
     }, {});
   };
+
+  groupById(array,key){
+    return array.reduce(function (rv, x, value,id, name) {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+       
+       rv[x[value]] = 0;
+       rv[x[id]] = x;
+
+       //rv[x[name]] = rv[x[0]['org']['name']];
+       
+
+      for(let elem of rv){
+
+        rv[x[value]] = rv[x[value]] + elem.value ;
+
+      }
+
+      return rv;
+    }, {});
+  }
+
+  orderBy(array, key)
+  {
+     return  array.sort(function (a, b) { return b[key] - a[key]; }).slice(0, 20);
+
+  };
+
+  orderByValue(array, key)
+  {
+     return  array.sort(function (a, b) { return b[key] - a[key]; });
+
+  };
+
 
   ngOnInit() {
     this.spinnerService.show();
@@ -234,6 +414,10 @@ export class MapComponent implements OnInit {
           this.implementadores.push(organizacion);
         }
       }
+
+      
+
+
       //Acuerdos de PAZ
       for (let acuerdodepaz of data.filtros.tags) {
         if (acuerdodepaz.code) {
@@ -259,6 +443,10 @@ export class MapComponent implements OnInit {
         this.getProjectsList(ids, this.list_start, this.list_end);
       }
       const datamapa: any[] = [];
+
+      let datachart = []; //para el chartbeneficiarios
+           let datachartLabels = [];//para el chatbeneficiarios
+
       for (let project of all_projects) {
         let index = this.projects.indexOf(project);
         if (index == -1) {
@@ -324,15 +512,667 @@ export class MapComponent implements OnInit {
               }
             }
           }
+
+
         }
       }
+
+     this.generarChartEjecutores();
+     this.generarChartImplementadores();
+     this.generarChartDonantes();
+     this.generarChartDepartamentosPresupuestos();
+      this.generarChartPresupuestos();
+      this.generarChartBeneficiarios();
+      this.generarChartDepartamentos();
+      this.generarChartCiudades();
       this.markerClusterData = datamapa;
       this.periodos.sort();
       this.spinnerService.hide();
     });
+     
+  }
+
+
+  generarChartEjecutores(){
+
+    this.top5organizacionesejecutoras  = [];
+
+     /*console.log("Imprimo ejecutores ");
+      console.log(this.ejecutores);*/
+      
+      let ejecutoresunicos = [];
+
+      /*console.log("imprimo projects");
+      console.log(this.projects);*/
+
+      let antestopejecutoras = [];
+
+      for(let ejecutor of this.ejecutores){
+
+        let indexunicos = ejecutoresunicos.find(((ejecu) => ejecu.organization_id == ejecutor.organization_id));
+        if(indexunicos){
+
+        }else{
+          ejecutoresunicos.push(ejecutor);
+        }
+
+        let indexproj = this.projects.find(((proj) => proj.id == ejecutor.project_id));
+
+         if(indexproj){
+          /*  console.log("projecto existe:");
+            console.log(indexproj);*/
+
+            ejecutor.orgprojpresupuesto = indexproj.presu;
+           /* console.log("ejecutor:");
+            console.log(ejecutor);*/
+
+            let indextopejecutoras = antestopejecutoras.find((eje) => eje.organization_id == ejecutor.organization_id);
+             
+             if(indextopejecutoras){
+             //  console.log("YA EXISTE");
+               indextopejecutoras.orgprojpresupuesto = indextopejecutoras.orgprojpresupuesto + ejecutor.orgprojpresupuesto;
+              //  console.log(ejecutor);
+             }else{
+               antestopejecutoras.push(ejecutor);
+             }
+
+           }else{
+
+            /*  console.log("projecto no existe:");
+             console.log(indexproj);*/
+
+           }
+      
+      }
+
+      this.ejecutorestotal = ejecutoresunicos.length;
+        let topejecutoras = antestopejecutoras;
+       /* console.log("TOP EJECUTORES");
+       console.log(topejecutoras);*/
+
+      //this.toporganizacionesejecutoras = topejecutoras.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; });
+      this.toporganizacionesejecutorasTodas = topejecutoras;
+      this.top5organizacionesejecutoras = this.toporganizacionesejecutorasTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; }).slice(0, 5);
+
+      //console.log(this.top5organizacionesejecutoras);
+
+      let labelsnames = [];
+
+      console.log("barras");
+      console.log(this.barChartDataTopEjecutores);
+
+      for(let orgtop of this.top5organizacionesejecutoras){
+
+       // for(let data of this.barChartDataTopEjecutores[0]['data']){
+
+          if(orgtop == this.top5organizacionesejecutoras[0]){
+             
+            this.barChartDataTopEjecutores[0]['data'][0] = orgtop.orgprojpresupuesto;
+
+             //this.barChartDataTopEjecutores[0]= orgtop.orgprojpresupuesto;
+             this.barChartDataTopEjecutores[0]['label'] = orgtop.org.name;
+             labelsnames.push(orgtop.org.acronym);
+          }
+
+          if(orgtop == this.top5organizacionesejecutoras[1]){
+            
+             this.barChartDataTopEjecutores[1]['data'][0] = orgtop.orgprojpresupuesto;
+
+             //this.barChartDataTopEjecutores[1] = orgtop.orgprojpresupuesto;
+             this.barChartDataTopEjecutores[1]['label'] = orgtop.org.name;
+             labelsnames.push(orgtop.org.acronym);
+          }
+
+          if(orgtop == this.top5organizacionesejecutoras[2]){
+
+             this.barChartDataTopEjecutores[2]['data'][0] = orgtop.orgprojpresupuesto;
+             //this.barChartDataTopEjecutores[2] = orgtop.orgprojpresupuesto;
+             this.barChartDataTopEjecutores[2]['label'] = orgtop.org.name;
+            labelsnames.push(orgtop.org.acronym);
+          }
+
+          if(orgtop == this.top5organizacionesejecutoras[3]){
+
+            this.barChartDataTopEjecutores[3]['data'][0] = orgtop.orgprojpresupuesto;
+
+             //this.barChartDataTopEjecutores[3] = orgtop.orgprojpresupuesto;
+             this.barChartDataTopEjecutores[3]['label'] = orgtop.org.name;
+            labelsnames.push(orgtop.org.acronym);
+           
+          }
+
+          if(orgtop == this.top5organizacionesejecutoras[4]){
+             
+             this.barChartDataTopEjecutores[4]['data'][0] = orgtop.orgprojpresupuesto;
+
+            // this.barChartDataTopEjecutores[4] = orgtop.orgprojpresupuesto;
+             this.barChartDataTopEjecutores[4]['label'] = orgtop.org.name;
+
+             labelsnames.push(orgtop.org.acronym);
+          }
+
+       // }
+
+        //this.pieChartDataTopEjecutores[0]['data'].push(orgtop.orgprojpresupuesto);
+       //  this.pieChartDataTopEjecutores.push({data:orgtop.orgprojpresupuesto});
+        
+      }
+
+      console.log("labels antes");
+      console.log(this.barChartDataTopEjecutoresLabels);
+
+      console.log("labelsnames");
+      console.log(labelsnames);
+
+      this.barChartDataTopEjecutoresLabels = labelsnames;
+
+      console.log("data top ejecutores");
+       console.log(this.barChartDataTopEjecutores);
+       this.mostrarTop5Ejecutoras= true;
+  }
+
+  mostrarTodasOrgEjecutoras(valor){
+      
+    if(valor == 'todas'){
+        this.top5organizacionesejecutoras = this.toporganizacionesejecutorasTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; });
+      this.mostrarTop5Ejecutoras= false;
+
+      }else if(valor == 'top5'){
+
+        this.top5organizacionesejecutoras = this.toporganizacionesejecutorasTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; }).slice(0,5);
+      this.mostrarTop5Ejecutoras= true;
+
+      }
+
+  }
+
+  generarChartImplementadores(){
+
+    this.top5organizacionesimplementadoras  = [];
+
+    // console.log("Imprimo implementadores ");
+     // console.log(this.implementadores);
+      
+      let implementadoresunicos = [];
+
+      /*console.log("imprimo projects");
+      console.log(this.projects);*/
+
+      let antestopimplementadoras = [];
+
+      for(let implementador of this.implementadores){
+
+        let indexunicos = implementadoresunicos.find((implem) => implem.organization_id == implementador.organization_id);
+        if(indexunicos){
+
+        }else{
+          implementadoresunicos.push(implementador);
+        }
+
+        let indexproj = this.projects.find(((proj) => proj.id == implementador.project_id));
+
+         if(indexproj){
+     //     console.log("projecto existe:");
+      //      console.log(indexproj);
+
+            implementador.orgprojpresupuesto = indexproj.presu;
+        //   console.log("implementador:");
+        //    console.log(implementador);
+
+            let indextopimplemenatadoras = antestopimplementadoras.find((impl) => impl.organization_id == implementador.organization_id);
+             
+             if(indextopimplemenatadoras){
+       //       console.log("YA EXISTE");
+               indextopimplemenatadoras.orgprojpresupuesto = indextopimplemenatadoras.orgprojpresupuesto + implementador.orgprojpresupuesto;
+       //        console.log(implementador);
+             }else{
+               antestopimplementadoras.push(implementador);
+             }
+
+           }else{
+
+            /*  console.log("projecto no existe:");
+             console.log(indexproj);*/
+
+           }
+      
+      }
+
+      this.implementadorestotal = implementadoresunicos.length;
+        let topimplementadoras = antestopimplementadoras;
+    //    console.log("TOP EJECUTORES");
+    //   console.log(topimplementadoras);
+
+      this.toporganizacionesimplementadorasTodas = topimplementadoras;
+      this.top5organizacionesimplementadoras = this.toporganizacionesimplementadorasTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; }).slice(0, 5);
+
+    //  console.log(this.top5organizacionesimplementadoras);
+
+      for(let orgtop of this.top5organizacionesimplementadoras){
+
+        for(let data of this.barChartDataTopImplementadores[0]['data']){
+
+          if(orgtop == this.top5organizacionesimplementadoras[0]){
+
+             this.barChartDataTopImplementadores[0]['data'][0] = orgtop.orgprojpresupuesto;
+          }
+
+          if(orgtop == this.top5organizacionesimplementadoras[1]){
+
+             this.barChartDataTopImplementadores[0]['data'][1] = orgtop.orgprojpresupuesto;
+          }
+
+          if(orgtop == this.top5organizacionesimplementadoras[2]){
+
+             this.barChartDataTopImplementadores[0]['data'][2] = orgtop.orgprojpresupuesto;
+          }
+
+          if(orgtop == this.top5organizacionesimplementadoras[3]){
+
+             this.barChartDataTopImplementadores[0]['data'][3] = orgtop.orgprojpresupuesto;
+           
+          }
+
+          if(orgtop == this.top5organizacionesimplementadoras[4]){
+
+             this.barChartDataTopImplementadores[0]['data'][4] = orgtop.orgprojpresupuesto;
+          }
+
+        }
+      }
+
+    //  console.log("data top implementadoras");
+    //   console.log(this.pieChartDataTopDonantes);
+       this.mostrarTop5Implementadores= true;
+  }
+
+  mostrarTodasOrgImplementadoras(valor){
+      
+    if(valor == 'todas'){
+        this.top5organizacionesimplementadoras = this.toporganizacionesimplementadorasTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; });
+      this.mostrarTop5Implementadores= false;
+
+      }else if(valor == 'top5'){
+
+        this.top5organizacionesimplementadoras = this.toporganizacionesimplementadorasTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; }).slice(0,5);
+      this.mostrarTop5Implementadores= true;
+
+      }
+
+  }
+
+
+  generarChartDonantes(){
+
+    this.top5organizacionesdonantes  = [];
+
+    // console.log("Imprimo donantes ");
+      //console.log(this.donantes);
+      
+      let donantesunicos = [];
+
+      let antestopdonantes = [];
+
+      for(let donante of this.donantes){
+        
+        //console.log("DONANTE:");
+
+        //console.log(donante);
+
+        let indexunicos = donantesunicos.find(((donant) => donant.organization_id == donante.organization_id));
+       
+       //console.log("Busco si donante ya existe en array unicos");
+        //console.log(indexunicos);
+
+        if(indexunicos){
+         // console.log("YA existe donante");
+
+         // console.log("valor de donante");
+         // console.log(donante.orgprojpresupuesto);
+
+          indexunicos.orgprojpresupuesto = indexunicos.orgprojpresupuesto + donante.value;
+           
+          // console.log("NUEVO VALOR DE DONANTE");
+          // console.log(indexunicos.orgprojpresupuesto);
+
+        }else{
+         // console.log("Donante no existe en array unicos, lo pusheo");
+          donante.orgprojpresupuesto = donante.value;
+          donantesunicos.push(donante);
+        }
+
+       
+      
+      }
+
+      this.donantestotal = donantesunicos.length;
+        let topdonantes = donantesunicos;
+      //  console.log("TOP donantes");
+      // console.log(topdonantes);
+
+      this.toporganizacionesdonantesTodas = topdonantes;
+      this.top5organizacionesdonantes = this.toporganizacionesdonantesTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; }).slice(0, 5);
+
+     // console.log(this.top5organizacionesdonantes);
+
+      for(let orgtop of this.top5organizacionesdonantes){
+
+        for(let data of this.barChartDataTopDonantes[0]['data']){
+
+          if(orgtop == this.top5organizacionesdonantes[0]){
+
+             this.barChartDataTopDonantes[0]['data'][0] = orgtop.orgprojpresupuesto;
+          }
+
+          if(orgtop == this.top5organizacionesdonantes[1]){
+
+             this.barChartDataTopDonantes[0]['data'][1] = orgtop.orgprojpresupuesto;
+          }
+
+          if(orgtop == this.top5organizacionesdonantes[2]){
+
+             this.barChartDataTopDonantes[0]['data'][2] = orgtop.orgprojpresupuesto;
+          }
+
+          if(orgtop == this.top5organizacionesdonantes[3]){
+
+             this.barChartDataTopDonantes[0]['data'][3] = orgtop.orgprojpresupuesto;
+           
+          }
+
+          if(orgtop == this.top5organizacionesdonantes[4]){
+
+             this.barChartDataTopDonantes[0]['data'][4] = orgtop.orgprojpresupuesto;
+          }
+
+        }
+      }
+
+      //console.log("data top Donantes");
+      // console.log(this.pieChartDataTopDonantes);
+       this.mostrarTop5Donantes= true;
+  }
+
+  mostrarTodasOrgDonantes(valor){
+      
+    if(valor == 'todas'){
+        this.top5organizacionesdonantes = this.toporganizacionesdonantesTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; });
+      this.mostrarTop5Donantes= false;
+
+      }else if(valor == 'top5'){
+
+        this.top5organizacionesdonantes = this.toporganizacionesdonantesTodas.sort(function (a, b) { return b.orgprojpresupuesto - a.orgprojpresupuesto; }).slice(0,5);
+      this.mostrarTop5Donantes= true;
+
+      }
+
+  }
+
+  generarChartDepartamentosPresupuestos(){
+   // console.log(this.projects);
+
+    this.top5departamentospresupuestos;
+
+    let presupuestosunicos = [];
+
+    for(let project of this.projects){
+
+      for(let admindivision of project.admins){
+
+        
+         
+         if(admindivision.admin_division && admindivision.admin_division.parent_id == null){
+          
+
+            let objadminpush = {
+           id:null,
+           name:'',
+           presu:0,
+         };
+         //console.log(admindivision);
+
+           objadminpush.id = admindivision.admin_id;
+           objadminpush.name = admindivision.admin_division.name;
+
+           objadminpush.presu = project.presu;
+
+         //console.log("Busco en top5presupuestos");
+         //console.log(objadminpush.id);
+
+           let indexadmindiv = presupuestosunicos.find((admdiv) => admdiv.id == objadminpush.id);
+           
+           if(indexadmindiv){
+            // console.log("Ya Existe");
+             //console.log(indexadmindiv);
+             indexadmindiv.presu = indexadmindiv.presu + objadminpush.presu;
+             //console.log("nuevo presu");
+             //console.log(indexadmindiv.presu);
+
+           }else{
+            //  console.log("No existe, pusheo");
+             presupuestosunicos.push(objadminpush);
+
+           }
+         }
+         
+         
+      }
+    }
+    //console.log("top5 presupuestos unicos");
+    //console.log(presupuestosunicos);
+
+
+    let topdepartamentos = presupuestosunicos;
+
+    this.topdepartamentosTodos = topdepartamentos;
+      this.top5departamentospresupuestos = this.topdepartamentosTodos.sort(function (a, b) { return b.presu - a.presu; }).slice(0, 5);
+     
+
+     for(let departamento of this.top5departamentospresupuestos){
+
+        for(let data of this.barChartDataTopDepartamentos[0]['data']){
+
+          if(departamento == this.top5departamentospresupuestos[0]){
+
+             this.barChartDataTopDepartamentos[0]['data'][0] = departamento.presu;
+          }
+
+          if(departamento == this.top5departamentospresupuestos[1]){
+
+             this.barChartDataTopDepartamentos[0]['data'][1] = departamento.presu;
+          }
+
+          if(departamento == this.top5departamentospresupuestos[2]){
+
+             this.barChartDataTopDepartamentos[0]['data'][2] = departamento.presu;
+          }
+
+          if(departamento == this.top5departamentospresupuestos[3]){
+
+             this.barChartDataTopDepartamentos[0]['data'][3] = departamento.presu;
+           
+          }
+
+          if(departamento == this.top5departamentospresupuestos[4]){
+
+             this.barChartDataTopDepartamentos[0]['data'][4] = departamento.presu;
+          }
+
+        }
+      }
+  }
+
+
+  mostrarTodosDepartamentosTop(valor){
+      
+    if(valor == 'todas'){
+        this.top5departamentospresupuestos = this.topdepartamentosTodos.sort(function (a, b) { return b.presu - a.presu; });
+      this.mostrarTop5Departamentos= false;
+
+      }else if(valor == 'top5'){
+
+        this.top5departamentospresupuestos = this.topdepartamentosTodos.sort(function (a, b) { return b.presu - a.presu; }).slice(0,5);
+      this.mostrarTop5Departamentos= true;
+
+      }
+
+  }
+
+
+  generarChartPresupuestos(){
+    
+   this.pieChartDataPresupuestos = [];
+   this.pieChartPresupuestosLabels = [];
+
+   this.pieChartInfoPresupuestos = [];
+
+
+          var top5 = this.projects.sort(function (a, b) { return b.presu - a.presu; }).slice(0, 5);
+       //  console.log(top5);
+          for(let tp of top5){ 
+
+ 
+               //let val = this.currencyFormat(tp.presu)
+                     //  datapresu.push(tp.presu);
+                this.pieChartDataPresupuestos.push(parseFloat(tp.presu).toFixed(2));//parseInt(tp.presu));
+          // this.pieChartDataPresupuestos.push(Math.round(tp.presu));//parseInt(tp.presu));
+
+                     //datalabelpresu.push(tp.id.toString());
+                     this.pieChartPresupuestosLabels.push(tp.name);
+
+                     this.pieChartInfoPresupuestos.push(tp);
+                    // console.log(tp);
+ 
+          }
+
+        /*  console.log(this.pieChartInfoPresupuestos);
+          console.log(this.pieChartDataPresupuestos); */
+    
+
+  }
+
+ currencyFormat (num) {
+    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+}
+  generarChartBeneficiarios(){
+
+    this.pieChartDataBeneficiarios = [];
+    this.pieChartBeneficiariosLabels = [];
+
+    this.pieChartInfoBeneficiarios = [];
+
+    const beneficiarios = []; 
+
+    for(let project of this.projects){
+
+      if(project.beneficiaries.length > 0){
+
+           for(let benef of project.beneficiaries){
+            // console.log("beneficiario");
+            // console.log(benef);
+
+             beneficiarios.push(benef);
+
+           }
+      }
+
+    } 
+
+     var top5beneficiarios = beneficiarios.sort(function (a, b) { return b.total - a.total; }).slice(0, 5);
+
+      for (let bn of top5beneficiarios){
+   
+       // console.log(bn)
+
+           this.pieChartDataBeneficiarios.push(bn.total);//parseInt(tp.presu));
+           this.pieChartBeneficiariosLabels.push(bn.project_id.toString());
+
+          // console.log(bn);
+          // console.log(this.projects);
+
+           let indexbenefpro = this.projects.find((proj) => proj.id == bn.project_id);
+          // console.log(indexbenefpro);
+           if(indexbenefpro){
+             this.pieChartInfoBeneficiarios.push(indexbenefpro);
+            // console.log(bn);
+
+           }
+           
+
+      }
+
+     // console.log(this.pieChartInfoBeneficiarios);
+
+
+
+  }
+
+  generarChartDepartamentos(){
+    
+   this.pieChartDataDepartamentos = [];
+   this.pieChartDepartamentosLabels = [];
+
+   this.pieChartInfoDepartamentos = [];
+
+  
+    
+
+          var top5 = this.departamentos.sort(function (a, b) { return b.projects_count - a.projects_count; }).slice(0, 5);
+       //  console.log(top5);
+          for(let tp of top5){
+
+
+            this.pieChartDataDepartamentos.push(tp.projects_count);//parseInt(tp.presu));
+     
+                     this.pieChartDepartamentosLabels.push(tp.name);
+
+                     this.pieChartInfoDepartamentos.push(tp);
+                  //  console.log(tp);
+ 
+          }
+
+       //    console.log(this.pieChartInfoDepartamentos);
+       //   console.log(this.pieChartDataDepartamentos); 
+    
+
+  }
+
+  generarChartCiudades(){
+    
+   this.pieChartDataCiudades = [];
+   this.pieChartCiudadesLabels = [];
+
+   this.pieChartInfoCiudades = [];
+
+  
+    
+
+          var top5 = this.cities.sort(function (a, b) { return b.projects_count - a.projects_count; }).slice(0, 5);
+       //  console.log(top5);
+          for(let tp of top5){
+
+
+            this.pieChartDataCiudades.push(tp.projects_count);//parseInt(tp.presu));
+     
+                     this.pieChartCiudadesLabels.push(tp.name);
+
+                     this.pieChartInfoCiudades.push(tp);
+                 //   console.log(tp);
+ 
+          }
+
+      //  console.log(this.pieChartInfoCiudades);
+       //   console.log(this.pieChartDataCiudades); 
+    
+
   }
 
   enviarInfo() {
+
+this.ejecutores = [];
+this.donantes = [];
+      this.implementadores = [];
+
     this.spinnerService.show();
     var lugares = [];
     this.departamentos = [];
@@ -432,8 +1272,16 @@ export class MapComponent implements OnInit {
       this.filtros.tags_list = this.groupBy(data.filtros.tags, 'parent_id');
       this.filtros.stags_list = this.groupBy(data.filtros.s_tags, 'parent_id');
       this.filtros.org_list = this.groupBy(data.filtros.org, 'relation_id');
+      
 
       let all_projects = data.pa;
+      if (all_projects.length > 0) {
+        let ids = all_projects.map(function (x) {
+          return x.id;
+        });
+        this.getProjectsList(ids, this.list_start, this.list_end);
+      }
+
       this.projects = all_projects;
       const datamapa: any[] = [];
       this.presupuestototal = 0;
@@ -530,6 +1378,16 @@ export class MapComponent implements OnInit {
       }
       this.markerClusterData = datamapa;
       this.spinnerService.hide();
+
+      this.generarChartEjecutores();
+      this.generarChartImplementadores();
+      this.generarChartDonantes();
+      this.generarChartDepartamentosPresupuestos();
+      this.generarChartPresupuestos();
+      this.generarChartBeneficiarios();
+      this.generarChartDepartamentos();
+      this.generarChartCiudades();
+
     });
   }
 
@@ -600,7 +1458,7 @@ export class MapComponent implements OnInit {
     }
   }
 
-  projectsduplicadospresupuesto(array) {
+ /* projectsduplicadospresupuesto(array) {
     let newarraypresupuesto = [];
     for (let elemento of array) {
       let index = this.projects.indexOf(elemento);
@@ -608,7 +1466,7 @@ export class MapComponent implements OnInit {
         this.presupuestototal = this.presupuestototal + elemento.cost;
       }
     }
-  }
+  }*/
 
   projectsduplicados(array) {
     let newarray = [];
@@ -653,8 +1511,19 @@ export class MapComponent implements OnInit {
     this.collapsedSelected = position;
   }
 
+
+
+
+
+
+
+
+
+
+
+
 //FILTRO POR DEPARTAMENTO
-  filtroPorDepartamento(departamento) {
+  /*filtroPorDepartamento(departamento) {
     this.projects = [];
     this.markers = [];
     let valdepartamento = parseInt(departamento);
@@ -788,10 +1657,12 @@ export class MapComponent implements OnInit {
         }
       });
     }
-  }
+  }*/
+
+
 
 //FILTRO POR CIUDAD
-  filtroPorCiudad(city) {
+ /* filtroPorCiudad(city) {
     this.projects = [];
     this.markers = [];
     let valcit = parseInt(city);
@@ -924,14 +1795,15 @@ export class MapComponent implements OnInit {
       });
     }
   }
+  */
 
-  actualizarDatos() {
+  /*actualizarDatos() {
     for (let proj of this.projects) {
       this.presupuestototal = this.presupuestototal + proj.cost;
     }
-  }
+  }*/
 
-  filtroPorFecha() {
+  /*filtroPorFecha() {
     this.markers = [];
     const dataCluster: any[] = [];
     let $info = new Date();
@@ -976,4 +1848,6 @@ export class MapComponent implements OnInit {
       this.markerClusterData = dataCluster;
     });
   }
+  */
+
 }
