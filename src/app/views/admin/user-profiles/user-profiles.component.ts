@@ -17,7 +17,7 @@ export class UserProfilesComponent implements AfterContentInit {
   data: any[];
   item: userProfile;
   dataTable: any;
-  title = 'Perfiles de usuario';
+  title = 'Perfil de usuario';
   titles = [
     { data: 'name', title: 'Nombre'},
     { data: null,
@@ -26,7 +26,7 @@ export class UserProfilesComponent implements AfterContentInit {
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Perfiles de usuario';
+  entity = 'perfil de usuario';
   entity_api = 'userprofiles'; // Ruta del api
   modal;
 
@@ -56,6 +56,7 @@ export class UserProfilesComponent implements AfterContentInit {
     this.chRef.detectChanges();
     const table: any = $('.table7');
     this.dataTable = table.DataTable({
+      'language': { 'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'},
       'processing': true,
       'serverSide': true,
       'ajax': {

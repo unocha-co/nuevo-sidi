@@ -18,17 +18,17 @@ export class AdministrativeDivisionsComponent implements AfterContentInit {
   data: any[];
   item: Divisions;
   dataTable: any;
-  title = 'Divisiones Administrativas';  // Titulo para contenedor de la tabla
+  title = 'División Administrativa';  // Titulo para contenedor de la tabla
   titles = [
       { data: 'name', title: 'Nombre'},
-      { data: 'parent.name', 'defaultContent': '-', title: 'Padre'},
+      { data: 'parent.name', 'defaultContent': '-', title: 'Nivel superior'},
       { data: null,
         render: function ( data, type, row ) {
           return `<button class="btn btn-primary btn-square" type="button" id="btn-edit" data-elemnt-obj="${data.id}"><i class="fa fa-edit"></i></button>
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
         }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Divisiones administrativa'; // Nombre de la entidad
+  entity = 'división administrativa'; // Nombre de la entidad
   entity_api = 'administrative'; // Ruta del api
   modal;
 
@@ -60,6 +60,7 @@ export class AdministrativeDivisionsComponent implements AfterContentInit {
     this.chRef.detectChanges();
     const table: any = $('.table8');
     this.dataTable = table.DataTable({
+      'language': { 'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'},
       'processing': true,
       'serverSide': true,
       'ajax': {

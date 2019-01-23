@@ -19,7 +19,7 @@ export class ContactGroupsComponent implements AfterContentInit {
   data: any[];
   item: Contact;
   dataTable: any;
-  title = 'Grupos de contactos'; // Titulo para contenedor de la tabla
+  title = 'Grupo de contactos'; // Titulo para contenedor de la tabla
   titles = [
     { data: 'name', title: 'Nombre'},
     { data: null,
@@ -29,7 +29,7 @@ export class ContactGroupsComponent implements AfterContentInit {
       }, title: 'Acciones'
     }
   ]; // Columnas del datatable
-  entity = 'Grupos de contactos';  // Nombre de la entidad
+  entity = 'grupo de contactos';  // Nombre de la entidad
   entity_api = 'contact'; // uta del api
   modal;
 
@@ -60,6 +60,7 @@ export class ContactGroupsComponent implements AfterContentInit {
     this.chRef.detectChanges();
     const table: any = $('.table2');
     this.dataTable = table.DataTable({
+      'language': { 'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'},
       'processing': true,
       'serverSide': true,
       'ajax': {

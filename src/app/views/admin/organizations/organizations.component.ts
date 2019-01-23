@@ -19,7 +19,7 @@ export class OrganizationsComponent implements AfterContentInit {
   data: any[];
   item: Organizations;
   dataTable: any;
-  title = 'Organizaciones'; //  Titulo para contenedor de la tabla
+  title = 'Organización'; //  Titulo para contenedor de la tabla
   titles = [
     { data: 'name', title: 'Nombre'},
     { data: 'acronym', title: 'Siglas'},
@@ -30,7 +30,7 @@ export class OrganizationsComponent implements AfterContentInit {
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Organizaciones'; // Nombre de la entidad
+  entity = 'organización'; // Nombre de la entidad
   entity_api = 'organizations'; // Ruta del api
   modal;
   constructor(private http: Http, private chRef: ChangeDetectorRef, private service: Service) {
@@ -59,6 +59,7 @@ export class OrganizationsComponent implements AfterContentInit {
     this.chRef.detectChanges();
     const table: any = $('.table5');
     this.dataTable = table.DataTable({
+      'language': { 'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'},
       'processing': true,
       'serverSide': true,
       'ajax': {

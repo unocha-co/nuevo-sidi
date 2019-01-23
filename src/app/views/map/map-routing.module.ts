@@ -25,7 +25,7 @@ const routes: Routes = [
 	path:'',
 	component:MapComponent,
 	data:{
-		title:'MAP'
+		title:'Mapa de Proyectos'
 	}
   }
    

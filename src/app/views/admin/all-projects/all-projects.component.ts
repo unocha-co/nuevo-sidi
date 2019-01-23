@@ -10,6 +10,8 @@ import { Service } from '../../../services/service.module';
 import { Project } from '../../../models/project';
 import * as globals from '../../../globals';
 import { navItems } from '../../../_nav';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+
 
 @Component({
   selector: 'app-all-projects',
@@ -24,18 +26,19 @@ export class AllProjectsComponent implements AfterContentInit {
   // Columnas del datatable
   titles = [
     { data: 'name', title: 'Nombre'},
-    { data: 'date_start', title: 'Fecha de inicio'},
-    { data: 'date_end', title: 'Fecha de terminación'},
-    { data: 'cost', title: 'Cósto'},
+    { data: 'date_start', title: 'Inicio'},
+    { data: 'date_end', title: 'Terminación'},
+    { data: 'cost', title: 'Presupuesto', render: $.fn.dataTable.render.number( '.', ',', 0, '$' )},
     { data: null,
       render: function ( data, type, row ) {
         return `<button class="btn btn-primary btn-square" type="button" id="btn-edit-p" data-elemnt-obj="${data.id}"><i class="fa fa-edit"></i></button>
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
   ];
-  entity = 'Proyectos'; // Nombre de la entidad
+  entity = 'proyecto'; // Nombre de la entidad
   entity_api = 'allprojects'; // Ruta del api
-  constructor(private http: Http, private chRef: ChangeDetectorRef, private service: Service, private router: Router ) {
+  constructor(private http: Http, private chRef: ChangeDetectorRef, private service: Service, private router: Router, private _localeService: BsLocaleService ) {
+      this._localeService.use('es');
   }
 
   ngAfterContentInit() {
@@ -60,6 +63,7 @@ export class AllProjectsComponent implements AfterContentInit {
     this.chRef.detectChanges();
     const table: any = $('.table1');
     this.dataTable = table.DataTable({
+      'language': { 'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'},
       'processing': true,
       'serverSide': true,
       'ajax': {

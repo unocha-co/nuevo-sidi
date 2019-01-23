@@ -14,7 +14,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="card">
-                <div class="card-header">BÁSICA</div>
+                <div class="card-header">DESCRIPCIÓN</div>
                 <div class="card-body">
                   <div class="row p15">
                     <div class="col-md-12">
@@ -44,9 +44,13 @@
                                        [message]="description.errors | validationError"></error-message>
                       </div>
                     </div>
-                    <div class="col-md-12">
-                      <label>Fechas*</label>
+                    <div class="col-md-6">
+                      <label>Fecha de inicio*</label>
                     </div>
+                    <div class="col-md-6">
+                      <label>Fecha de terminación*</label>
+                    </div>
+
                     <div class="col-md-6">
                       <div class="form-group">
                         <input type="text" placeholder="Fecha de incio*" class="form-control" bsDatepicker
@@ -93,7 +97,7 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>URL soportes del proyecto</label>
+                        <label>URL de soportes del proyecto</label>
                         <input type="text" class="form-control" [(ngModel)]="item.documents" #name="ngModel"
                                name="documents">
                       </div>
@@ -107,7 +111,7 @@
                   <div class="row p15">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Organización ejecutora*</label>
+                        <label>Ejecutora*</label>
                         <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modal(1)" type="button">
                           <i class="fa fa-plus"></i>
@@ -122,7 +126,7 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label>Implementadores*</label>
+                        <label>Implementadoras*</label>
                         <button class="btn btn-success btn-square btn-new btn-sm mr5 btn-add-modal" data-toggle="modal"
                                 (click)="show_modal(2)" type="button"><i class="fa fa-plus"></i></button>
                         <ng-select [items]="organizations" [multiple]="true" [closeOnSelect]="false" [searchable]="true"

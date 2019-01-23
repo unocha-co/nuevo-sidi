@@ -96,7 +96,7 @@
 
                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>TOP 5 ORGANIZACIONES EJECUTORAS CON MAYOR PRESUPUESTO</h3> 
+                  <h3>Principales Ejecutoras (Presupuesto)</h3>
                    <canvas baseChart
                       [(datasets)]="barChartDataTopEjecutores"
                       
@@ -119,12 +119,12 @@
                       </div>
                       
                       <button *ngIf="mostrarTop5Ejecutoras == true" type="button" (click)="mostrarTodasOrgEjecutoras('todas')">Mostrar Todos</button>
-                      <button *ngIf="mostrarTop5Ejecutoras == false" type="button" (click)="mostrarTodasOrgEjecutoras('top5')">Mostrar Top 5</button>
+                      <button *ngIf="mostrarTop5Ejecutoras == false" type="button" (click)="mostrarTodasOrgEjecutoras('top5')">Mostrar Principales</button>
                 </div>
 
                 
                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
-                  <h3>TOP 5 ORGANIZACIONES IMPLEMENTADORAS CON MAYOR PRESUPUESTO</h3> 
+                  <h3>Principales Implementadoras (Presupuesto)</h3>
                    <canvas baseChart
                       [(datasets)]="barChartDataTopImplementadores"
                       [(labels)]="barChartDataTopImplementadoresLabels"
@@ -148,7 +148,7 @@
                       </div>
                       
                       <button *ngIf="mostrarTop5Implementadores == true" type="button" (click)="mostrarTodasOrgImplementadoras('todas')">Mostrar Todos</button>
-                      <button *ngIf="mostrarTop5Implementadores == false" type="button" (click)="mostrarTodasOrgImplementadoras('top5')">Mostrar Top 5</button>
+                      <button *ngIf="mostrarTop5Implementadores == false" type="button" (click)="mostrarTodasOrgImplementadoras('top5')">Mostrar Principales</button>
                 </div>
 
        
@@ -156,7 +156,7 @@
 
                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>TOP 5 ORGANIZACIONES DONANTES CON MAYOR PRESUPUESTO</h3> 
+                  <h3>Principales Donantes (Presupuesto)</h3>
                    <canvas baseChart
                       [(datasets)]="barChartDataTopDonantes"
                       [(labels)]="barChartDataTopDonantesLabels"
@@ -180,12 +180,12 @@
                       </div>
                       
                       <button *ngIf="mostrarTop5Donantes == true" type="button" (click)="mostrarTodasOrgDonantes('todas')">Mostrar Todos</button>
-                      <button *ngIf="mostrarTop5Donantes == false" type="button" (click)="mostrarTodasOrgDonantes('top5')">Mostrar Top 5</button>
+                      <button *ngIf="mostrarTop5Donantes == false" type="button" (click)="mostrarTodasOrgDonantes('top5')">Mostrar Principales</button>
                 </div>
 
                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>TOP 5 DEPARTAMENTOS CON MAYOR PRESUPUESTO</h3> 
+                  <h3>Principales Departamentos (Presupuesto)</h3>
                    <canvas baseChart
                       [(datasets)]="barChartDataTopDepartamentos"
                       [(labels)]="barChartDataTopDepartamentosLabels"
@@ -209,7 +209,7 @@
                       </div>
                       
                       <button *ngIf="mostrarTop5Departamentos == true" type="button" (click)="mostrarTodosDepartamentosTop('todas')">Mostrar Todos</button>
-                      <button *ngIf="mostrarTop5Departamentos == false" type="button" (click)="mostrarTodosDepartamentosTop('top5')">Mostrar Top 5</button>
+                      <button *ngIf="mostrarTop5Departamentos == false" type="button" (click)="mostrarTodosDepartamentosTop('top5')">Mostrar Principales</button>
                 </div>
 
 
@@ -217,7 +217,7 @@
                
                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>LOS 5 PROYECTOS CON MAYOR PRESUPUESTO</h3> 
+                  <h3>Principales Proyectos (Presupuesto)</h3>
                     <canvas baseChart
                       [(data)]="pieChartDataPresupuestos"
                       [(labels)]="pieChartPresupuestosLabels"
@@ -233,7 +233,7 @@
                 </div>
                  <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>LOS 5 PROYECTOS CON MAYOR NÚMERO DE BENEFICIARIOS</h3> 
+                  <h3>Principales Proyectos (Beneficiarios)</h3>
                     <canvas baseChart 
                       [(data)]="pieChartDataBeneficiarios"
                       [(labels)]="pieChartBeneficiariosLabels"
@@ -251,7 +251,7 @@
 
                 <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>DEPARTAMENTOS CON MAYOR NÚMERO DE PROYECTOS</h3> 
+                  <h3>Principales Departamentos (Número de Proyectos)</h3>
                     <canvas baseChart 
                       [(data)]="pieChartDataDepartamentos"
                       [(labels)]="pieChartDepartamentosLabels"
@@ -267,7 +267,7 @@
 
                  <div class="col-lg-6 col-md-6" style="margin-bottom: 20px;" >
                   <!--<h4><i class="material-icons"></i></h4>-->
-                  <h3>CIUDADES CON MAYOR NÚMERO DE PROYECTOS</h3> 
+                  <h3>Principales Municipios (Número de Proyectos)</h3>
                     <canvas baseChart 
                       [(data)]="pieChartDataCiudades"
                       [(labels)]="pieChartCiudadesLabels"

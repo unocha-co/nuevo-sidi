@@ -17,7 +17,7 @@ export class OrganizationTypesComponent implements AfterContentInit {
   data: any[];
   item: Types;
   dataTable: any;
-  title = 'Tipos Organización'; // Titulo para contenedor de la tabla
+  title = 'Tipo de Organización'; // Titulo para contenedor de la tabla
   titles = [
     { data: 'type', title: 'Nombre'},
     { data: null,
@@ -26,7 +26,7 @@ export class OrganizationTypesComponent implements AfterContentInit {
                 <button class="btn btn-danger btn-square" type="button" id="btn-delete" data-elemnt-obj="${data.id}"><i class="fa fa-trash-o">`;
       }, title: 'Acciones'}
   ]; // Columnas del datatable
-  entity = 'Tipos Organización'; // Nombre de la entidad
+  entity = 'Tipo de Organización'; // Nombre de la entidad
   entity_api = 'types'; // Ruta del api
   modal;
 
@@ -56,6 +56,7 @@ export class OrganizationTypesComponent implements AfterContentInit {
     this.chRef.detectChanges();
     const table: any = $('.table4');
     this.dataTable = table.DataTable({
+      'language': { 'url': '//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json'},
       'processing': true,
       'serverSide': true,
       'ajax': {

@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="form-group row">
-              <label class="col-md-12 col-form-label">Seleccione un padre</label>
+              <label class="col-md-12 col-form-label">Seleccione el nivel superior</label>
               <div class="col-md-12">
                 <select name="parent_id" [(ngModel)]="item.parent_id" class="form-control">
                   <option *ngFor="let i of data" value="{{i.id}}">{{i.name}}</option>

@@ -56,7 +56,7 @@ export class MapComponent implements OnInit {
     parent_id: null,
     filtro: ''
   };
-  LAYER_OSM = tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18, attribution: 'Open Street Map'});
+  LAYER_OSM = tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v8/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmF0YmlrZXIiLCJhIjoiY2loejFyM3B4MDQwcHRnbTF5MWlmOHJuNCJ9.H5A3WGVx60EdqY0hMzIMKg', {maxZoom: 18, attribution: 'Open Street Map / MapBox'});
   // defino array markers
   markers: Marker[] = [];
   proyectoseleccionado: any = {
@@ -224,7 +224,7 @@ export class MapComponent implements OnInit {
     responsive: true
   };
 
- public barChartDataTopImplementadores:Array<any>=[{data:[12,20,30,40,50],label:'Top 5 Org Implementadoras'}];  
+ public barChartDataTopImplementadores:Array<any>=[{data:[12,20,30,40,50],label:'Principales Implementadoras'}];
   public barChartDataTopImplementadoresLabels:Array<any>=['1','2','3','4','5'];
   public barChartDataTopImplementadoresType = 'bar';
   public barChartDataTopImplementadoresLegend:boolean = true;
@@ -240,7 +240,7 @@ export class MapComponent implements OnInit {
     responsive: true
   };
 
- public barChartDataTopDonantes:Array<any>=[{data:[12,20,30,40,50],label:'Top 5 Org Donantes'}];  
+ public barChartDataTopDonantes:Array<any>=[{data:[12,20,30,40,50],label:'Principales Donantes'}];
   public barChartDataTopDonantesLabels:Array<any>=['1','2','3','4','5'];
   public barChartDataTopDonantesType = 'bar';
   public barChartDataTopDonantesLegend:boolean = true;
@@ -256,7 +256,7 @@ export class MapComponent implements OnInit {
     responsive: true
   };
 
- public barChartDataTopDepartamentos:Array<any>=[{data:[12,20,30,40,50],label:'Top 5 Departamentos'}];  
+ public barChartDataTopDepartamentos:Array<any>=[{data:[12,20,30,40,50],label:'Principales Departamentos'}];
   public barChartDataTopDepartamentosLabels:Array<any>=['1','2','3','4','5'];
   public barChartDataTopDepartamentosType = 'bar';
   public barChartDataTopDepartamentosLegend:boolean = true;
