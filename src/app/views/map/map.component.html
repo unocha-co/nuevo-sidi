@@ -31,7 +31,7 @@
               <div class="row p15">
                 <div class="col-lg-3 col-md-6 project-info-list">
                   <h4><i class="material-icons">people</i></h4>
-                  <h5>{{totalbeneficiarios}}</h5>
+                  <h5>{{totalbeneficiarios |  number:0}}</h5>
                   <h6>Beneficiarios</h6>
                 </div>
                 <div class="col-lg-3 col-md-6 project-info-list">
@@ -52,7 +52,7 @@
                 <div class="col-md-12" style="border-top: 1px solid;margin-top: 20px;">
                   <div style="margin-top:10px; text-align: center">
                     <h5>PRESUPUESTO</h5>
-                    <h3><b>{{presupuestototal | currency}}</b></h3>
+                    <h3><b>{{presupuestototal | currency : 'USD' : "$" : '0.0-0'}} US</b></h3>
                   </div>
                 </div>
               </div>
@@ -71,10 +71,10 @@
                       </div>
                       <div class="card-body">
                         <p><b>Descripción: </b>{{pro.description}}</p>
-                        <p><b>Presupuesto: </b>{{pro.presu | currency}}</p>
+                        <p><b>Presupuesto: </b>{{pro.presu | currency : 'USD' : "$" : '0.0-0'}} US</p>
                         <p><b>Beneficiarios: </b>
                           <span *ngFor="let beneficiario of pro.beneficiaries">
-                                {{beneficiario.total}}
+                                {{beneficiario.total  |  number:0}}
                               </span>
                         </p>
                         <p><b>Fecha Inicio: </b><span *ngIf="pro.date_start">{{pro.date_start}}</span></p>
@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-md-3">
                           <b>{{(orgejecutora.orgprojpresupuesto/presupuestototal) | percent:'1.2-2'}}</b>
-                          {{orgejecutora.orgprojpresupuesto | currency}}
+                          {{orgejecutora.orgprojpresupuesto | currency : 'USD' : "$" : '0.0-0'}} US
                         </div>
                       </div>
                       
@@ -143,7 +143,7 @@
                         </div>
                         <div class="col-md-3">
                          <!-- <b>{{(implementadora.orgprojpresupuesto/presupuestototal) | percent:'1.2-2'}}</b>-->
-                          {{implementadora.orgprojpresupuesto | currency}}
+                          {{implementadora.orgprojpresupuesto | currency : 'USD' : "$" : '0.0-0'}} US
                         </div>
                       </div>
                       
@@ -175,7 +175,7 @@
                         </div>
                         <div class="col-md-3">
                           <!--<b>{{(donante.orgprojpresupuesto/presupuestototal) | percent:'1.2-2'}}</b>-->
-                          {{donante.orgprojpresupuesto | currency}}
+                          {{donante.orgprojpresupuesto | currency : 'USD' : "$" : '0.0-0'}} US
                         </div>
                       </div>
                       
@@ -204,7 +204,7 @@
                         </div>
                         <div class="col-md-3">
                           <b>{{(departamento.presu/presupuestototal) | percent:'1.2-2'}}</b>
-                          {{departamento.presu | currency}}
+                          {{departamento.presu | currency : 'USD' : "$" : '0.0-0'}} US
                         </div>
                       </div>
                       
@@ -227,7 +227,7 @@
 
                       <div>
                         <p *ngFor="let projectinfo of pieChartInfoPresupuestos; let i=index" style="text-align: justify;">
-                          {{i+1}}: <span>{{projectinfo.code}} - Presupuesto: {{projectinfo.presu | currency}} - {{projectinfo.name}}</span>
+                          {{i+1}}: <span>{{projectinfo.code}} - Presupuesto: {{projectinfo.presu | currency : 'USD' : "$" : '0.0-0'}} US - {{projectinfo.name}}</span>
                         </p>
                       </div>
                 </div>
@@ -242,7 +242,7 @@
                       </canvas>
                       <div>
                         <p *ngFor="let projectinfo of pieChartInfoBeneficiarios; let i=index" style="text-align: justify;">
-                         {{i+1}}: <span>{{projectinfo.code}} - Beneficiarios: {{projectinfo.beneficiaries[0]['total'] | number}} - {{projectinfo.name}}</span>
+                         {{i+1}}: <span>{{projectinfo.code}} - Beneficiarios: {{projectinfo.beneficiaries[0]['total'] | number:0}} - {{projectinfo.name}}</span>
                         </p>
                       </div>
                 </div>
@@ -402,13 +402,13 @@
           <label><strong>Presupuesto: </strong></label>
           <div *ngFor="let presupuesto of proyectoseleccionado.budget">
             <p *ngIf="presupuesto == proyectoseleccionado.budget[0]">
-              Total: {{presupuesto.budget | currency}}
+              Total: {{presupuesto.budget | currency : 'USD' : "$" : '0.0-0'}} US
             </p>
             <p *ngIf="presupuesto == proyectoseleccionado.budget[1]">
-              Presu primer año: {{presupuesto.budget | currency}}
+              Presu primer año: {{presupuesto.budget | currency : 'USD' : "$" : '0.0-0'}} US
             </p>
             <p *ngIf="presupuesto == proyectoseleccionado.budget[1]">
-              Presu segundo año: {{presupuesto.budget | currency}}
+              Presu segundo año: {{presupuesto.budget | currency : 'USD' : "$" : '0.0-0'}} US
             </p>
           </div>
         </div>

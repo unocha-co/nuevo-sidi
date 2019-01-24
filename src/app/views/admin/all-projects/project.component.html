@@ -46,12 +46,6 @@
                     </div>
                     <div class="col-md-6">
                       <label>Fecha de inicio*</label>
-                    </div>
-                    <div class="col-md-6">
-                      <label>Fecha de terminación*</label>
-                    </div>
-
-                    <div class="col-md-6">
                       <div class="form-group">
                         <input type="text" placeholder="Fecha de incio*" class="form-control" bsDatepicker
                                [(bsValue)]="item.date_start" value="{{ item.date_start | date:'yyyy-MM-dd' }}" required
@@ -60,6 +54,7 @@
                       </div>
                     </div>
                     <div class="col-md-6">
+                      <label>Fecha de terminación*</label>
                       <div class="form-group">
                         <input type="text" placeholder="Fecha de final*" class="form-control" bsDatepicker name="ff"
                                [(bsValue)]="item.date_end" value="{{ item.date_end | date:'yyyy-MM-dd' }}" required>
@@ -154,7 +149,7 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <input type="number" class="form-control" [(ngModel)]="item.donors[i].value"
-                                       name="ap{{i}}" placeholder="Aportes U$">
+                                       name="ap{{i}}" placeholder="Aporte USD">
                               </div>
                             </div>
                           </div>
