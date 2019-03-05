@@ -29,6 +29,7 @@ export class AllProjectsComponent implements AfterContentInit {
     { data: 'date_start', title: 'Inicio'},
     { data: 'date_end', title: 'Terminación'},
     { data: 'cost', title: 'Presupuesto', render: $.fn.dataTable.render.number( '.', ',', 0, '$', ' US' )},
+    { data: 'updated_at', title: 'Actualizado'},
     { data: null,
       render: function ( data, type, row ) {
         return `<button class="btn btn-primary btn-square" type="button" id="btn-edit-p" data-elemnt-obj="${data.id}"><i class="fa fa-edit"></i></button>
