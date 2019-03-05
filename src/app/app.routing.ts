@@ -12,7 +12,7 @@ import { MapComponent } from './views/map/map.component';
 export const routes: Routes = [
    {
     path: '',
-    redirectTo: 'map',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
     canActivate: [ AuthGuardService ] ,
   },
