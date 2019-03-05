@@ -191,7 +191,7 @@
                         <tr *ngFor="let r of regions">
                           <td>
                             <input [(ngModel)]="r.selected" type="checkbox"
-                                   (change)="checkAll(r, 'childrens', $event.target.checked)" name="r{{r.id}}">
+                                    name="r{{r.id}}" disabled>
                             <label (click)="showMpos(r)"><strong>{{r.name}} <i
                               class="fa fa-angle-{{!r.show ? 'down' : 'up'}} fa-lg mt-4"></i></strong></label>
                             <ul class="mpos" [ngClass]="{'hide' : !r.show}">
