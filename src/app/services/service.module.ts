@@ -80,15 +80,7 @@ private handleError (error: any) {
 
   delete(entity, id) {
     const url = globals.api + '/' + entity;
-    return this.http.delete(url + '/' + id).pipe(map((response: any) => response.json()));
-  }
-
-  private getHeader() {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
-    headers.append('Access-Control-Allow-Origin', '*');
-    headers.append('Authorization',  'Bearer ' + localStorage.getItem('id_token'));
-    return headers;
+    return this.http.delete(url + '/' + id, { headers: this.getHeaders() }).pipe(map((response: any) => response.json()));
   }
 
   private getHeaders() {
