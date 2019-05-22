@@ -11,13 +11,13 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    x="0"
    y="0"
-   width="707.32544"
-   height="169.71973"
-   viewBox="0 0 707.32542 169.71973"
+   width="707.09998"
+   height="200"
+   viewBox="0 0 707.09996 200"
    version="1.1"
    style="display:block"
    id="svg885"
-   sodipodi:docname="logo_OCHA.svg"
+   sodipodi:docname="logo_OCHA_coreui.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata889">
@@ -41,11 +41,11 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1018"
+     inkscape:window-height="1017"
      id="namedview887"
      showgrid="true"
      inkscape:zoom="0.51925192"
-     inkscape:cx="-101.7078"
+     inkscape:cx="-483.98852"
      inkscape:cy="9.6696083"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
@@ -80,7 +80,7 @@ fill: #FFFFFF;
   </defs>
   <g
      id="g5138"
-     transform="matrix(1.5681751,0,0,1.5681751,-150.56637,-947.70503)">
+     transform="matrix(1.5681751,0,0,1.5681751,-150.56637,-933.42476)">
     <path
        d="m 243,660.7 c 0,-21.7 15.9,-38.5 38.2,-38.5 22.4,0 38.3,16.8 38.3,38.5 0,21.8 -15.9,38.6 -38.3,38.6 -22.3,0 -38.2,-16.8 -38.2,-38.6 m 65.9,0 c 0,-16 -10.9,-29.2 -27.7,-29.2 -16.8,0 -27.6,13.2 -27.6,29.2 0,16.1 10.8,29.3 27.6,29.3 16.8,0 27.7,-13.2 27.7,-29.3 z"
        class="g0_6"
