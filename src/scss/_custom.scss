@@ -189,3 +189,42 @@ input[type='checkbox']{
   border-radius: 20px;
   margin: 0 0 5px 10px;
 }
+
+
+
+
+
+.sidebar {
+  background: #1F69B3 !important;
+}
+.sidebar .nav-link.active {
+  color: #fff;
+  background: #418FDE;
+}
+.sidebar-minimized .sidebar .sidebar-minimizer {
+  background-color: #1F69B3 !important;
+}
+.btn-success {
+  color: #fff;
+  background-color: #1F69B3 !important;
+  border-color: #1F69B3 !important;
+}
+.btn-info {
+  color: #fff !important;
+  background-color: #1F69B3 !important;
+  border-color: #1F69B3 !important;
+}
+.btn-info:hover {
+  color: #1F69B3 !important;
+  background-color: #fff !important;
+  border-color: #fff !important;
+}
+.card {
+  border: 0px !important;
+}
+.card-header {
+  color: #fff;
+  background-color: #82B5E9;
+  border-bottom: 1px solid #c8ced3;
+}
+
